@@ -3,7 +3,10 @@
     "version": "2.0.0",
     "description": "free and private crypto portfolio app",
     "private": true,
-    "dependencies": {},
+    "dependencies": {
+        "react-redux": "^7.1.1",
+        "redux": "^4.0.4"
+    },
     "browserslist": "> 0.25%, not dead",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
