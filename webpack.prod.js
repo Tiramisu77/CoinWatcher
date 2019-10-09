@@ -16,7 +16,7 @@ module.exports = {
         new CopyPlugin([{ from: "./src/service-worker.js", to: "" }]),
     ],
 
-    mode: "production",
+    mode: "development",
     output: {
         filename: "index.js",
         path: path.resolve(__dirname, "build"),

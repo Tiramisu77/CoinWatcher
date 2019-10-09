@@ -1,0 +1,222 @@
+html {
+    height: 100%;
+    width: 100%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+}
+
+@media (min-width: 0px) and (max-width: 359px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    background-color: var(--page-bg-color);
+    display: flex;
+    justify-content: center;
+}
+
+:root {
+    --main-color: #38384a;
+    ---secondary-color: #131b2b;
+    --page-bg-color: #590e79;
+    --main-font-color: #d3dbe6;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    max-width: 700px;
+    flex-direction: column;
+    color: var(--main-font-color);
+    background-color: var(--main-color);
+    overflow: auto;
+}
+
+@media (min-width: 600px) {
+    #app {
+        padding: 0px 40px;
+    }
+}
+
+#app-root {
+    width: 100%;
+    flex: 1;
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+}
+
+.page-container {
+    display: grid;
+
+    align-content: center;
+}
+
+@media (min-height: 600px) {
+    .page-container {
+        height: 100%;
+    }
+}
+
+.btn {
+    padding: 3px 6px 3px 6px;
+    margin: 8px 4px 2px 4px;
+    background: linear-gradient(cyan, #9fa2c3);
+    color: black;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 2.5px;
+}
+
+#main {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows:
+        minmax(min-content, max-content)
+        minmax(min-content, max-content)
+        minmax(86px, max-content)
+        minmax(min-content, 1fr);
+    grid-gap: 0px;
+    height: 100%;
+    width: 100%;
+    justify-items: center;
+}
+#appehead {
+    display: flex;
+    font-weight: bold;
+    font-size: 1.3em;
+    margin-bottom: 4px;
+    margin-top: 4px;
+}
+#networth {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    white-space: nowrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+@media (max-height: 415px) {
+    #networth {
+        flex-direction: row;
+    }
+}
+
+#networth > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    margin: 6px;
+}
+.total-val {
+    font-size: 1.4rem;
+}
+.net-changes {
+    font-size: 0.9rem;
+}
+
+#change-period-buttons {
+    grid-row: 4;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    align-self: end;
+    flex-wrap: wrap;
+}
+
+#change-period-buttons > div {
+    display: flex;
+}
+
+.change-period-btn {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    margin-left: 4px;
+    margin-right: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 2px 2px rgba(0, 0, 0, 0.3), 0 0 4px 1px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    text-align: center;
+    width: 70px;
+}
+
+.period-btn-pressed {
+    background-color: cyan;
+    color: black;
+}
+
+#footer-buttons {
+    width: 100%;
+    display: flex;
+    margin-bottom: 4px;
+    border-top: 2px;
+    border-top-color: var(---main-font-color);
+    border-top-style: solid;
+    min-height: max-content;
+}
+#footer-buttons > div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+.footer-button {
+    height: 2.5em;
+    margin: 8px;
+    transition: 0.4s;
+    cursor: pointer;
+}
+.svgbody {
+    fill: var(--main-font-color);
+}
+.footer-button > .svgbody > .a {
+    fill: var(--main-font-color);
+}
+
+#add-coin {
+    height: 3em;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.inp {
+    background-color: inherit;
+    border-width: 0px;
+    border-bottom-width: 1px;
+    font: inherit;
+    color: inherit;
+}
+
+.inp:focus {
+    outline: none;
+}
+
+.inp:focus {
+    outline: none;
+}
