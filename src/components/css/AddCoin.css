@@ -1,0 +1,55 @@
+#AddCoinWindow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(---secondary-color);
+}
+
+#add-coin-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#add-coin-form > div {
+    margin: 3px;
+}
+
+.input-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.confirm-add-container {
+    display: flex;
+    justify-content: center;
+}
+
+.ticker-autocomplete {
+    position: absolute;
+    right: 0;
+    padding-right: 4px;
+    text-align: right;
+    max-height: 120px;
+    overflow-y: auto;
+    z-index: 99;
+    background-color: cyan;
+    color: black;
+    font: inherit;
+}
+
+.autocomplete-item {
+    padding: 4px;
+    margin: 2px;
+    display: none;
+    text-transform: capitalize;
+}
+
+.confirm-add {
+    padding: 3px 6px 3px 6px;
+    margin: 8px 4px 2px 4px;
+    background: linear-gradient(cyan, #9fa2c3);
+    color: black;
+    text-align: center;
+    width: 60px;
+    border-radius: 2.5px;
+}

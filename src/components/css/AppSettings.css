@@ -1,0 +1,35 @@
+#AppSettings {
+    display: grid;
+    background-color: var(---secondary-color);
+    justify-content: center;
+}
+
+.settings-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.setting-item-padder {
+    height: 1px;
+    width: 40px;
+}
+.color-scheme-picker {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    margin: 5px;
+}
+
+.custom-select {
+    background-color: white;
+    color: black;
+    max-height: 25vh;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 10;
+    padding: 4px;
+}
+
+.remove-versus-curr {
+    cursor: pointer;
+}
