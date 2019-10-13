@@ -1,6 +1,7 @@
 module.exports = {
     env: {
         es6: true,
+        browser: true,
     },
 
     extends: ["eslint:recommended", "plugin:security/recommended", "plugin:react/recommended"],
@@ -11,6 +12,7 @@ module.exports = {
     },
     settings: {
         react: {
+            "react/forbid-prop-types": 0,
             createClass: "createReactClass", // Regex for Component Factory to use,
             // default to "createReactClass"
             pragma: "React", // Pragma to use, default to "React"

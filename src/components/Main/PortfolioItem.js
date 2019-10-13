@@ -1,15 +1,13 @@
 import React from "react"
 
-export default function PortfolioItem() {
+export default function PortfolioItem({ id, amount }) {
     return (
         <div className="table-row">
             <div className="table-cell ticker-container">
                 <div className="l-t-a">
-                    <img className="coin-logo" alt="">
-                        {" "}
-                    </img>
-                    <div className="ticker" />
-                    <div className="amount" />
+                    <img className="coin-logo" alt="" />
+                    <div className="ticker">{id}</div>
+                    <div className="amount">{amount}</div>
                 </div>
             </div>
 

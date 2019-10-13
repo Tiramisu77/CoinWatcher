@@ -7,13 +7,11 @@ import FooterButtons from "./components/FooterButtons"
 function App() {
     return (
         <div id="app">
-            <div className="App">
-                <Router>
-                    <Head />
-                    <Root />
-                    <FooterButtons />
-                </Router>
-            </div>
+            <Router>
+                <Head />
+                <Root />
+                <FooterButtons />
+            </Router>
         </div>
     )
 }

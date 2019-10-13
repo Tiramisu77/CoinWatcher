@@ -10,7 +10,7 @@ import ChangePeriodButtons from "./ChangePeriodButtons"
 
 export default function Main() {
     return (
-        <div>
+        <div id="main">
             <TotalValue />
             <PortfolioLegend />
             <PortfolioView />

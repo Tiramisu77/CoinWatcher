@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import { addItem } from "../redux/actions/addItem"
+import { addItem } from "../redux/actions/portfolio"
 import "./css/AddCoin.css"
 
 class AddCoin extends React.Component {

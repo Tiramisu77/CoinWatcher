@@ -16,8 +16,6 @@ body {
     width: 100%;
     margin: 0;
     background-color: var(--page-bg-color);
-    display: flex;
-    justify-content: center;
 }
 
 :root {
@@ -25,6 +23,14 @@ body {
     --main-color: #3e1350;
     ---secondary-color: #091919;
     --main-font-color: #d3dbe6;
+}
+
+#root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
 }
 
 #app {

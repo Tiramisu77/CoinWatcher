@@ -30,8 +30,8 @@ const settings = {
 
 export default function(state = settings, action) {
     switch (action.type) {
-        case "": {
-            return 1
+        case "CHANGE_PERIOD": {
+            return { ...state, priceChangePeriod: action.payload }
         }
         default:
             return state
