@@ -31,6 +31,7 @@ const settings = {
 export default function(state = settings, action) {
     switch (action.type) {
         case "CHANGE_PERIOD": {
+            if (!action.payload) return { ...state }
             return { ...state, priceChangePeriod: action.payload }
         }
         default:

@@ -12,7 +12,6 @@ module.exports = {
     },
     settings: {
         react: {
-            "react/forbid-prop-types": 0,
             createClass: "createReactClass", // Regex for Component Factory to use,
             // default to "createReactClass"
             pragma: "React", // Pragma to use, default to "React"
@@ -35,5 +34,5 @@ module.exports = {
         ],
     },
     plugins: ["security", "react"],
-    rules: { "no-console": "off", "no-var": ["error"] },
+    rules: { "no-console": "off", "no-var": ["error"], "react/prop-types": [0] },
 }

@@ -159,6 +159,7 @@ body {
     text-decoration: none;
     text-align: center;
     width: 70px;
+    user-select: none;
 }
 
 .period-btn-pressed {
