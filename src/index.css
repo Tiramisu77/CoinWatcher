@@ -227,3 +227,8 @@ input[type="number"]::-webkit-outer-spin-button {
 .inp:focus {
     outline: none;
 }
+
+.link-no-decor {
+    color: var(--main-font-color);
+    text-decoration: none;
+}

@@ -1,31 +1,10 @@
 const settings = {
-    version: 1.14,
+    version: 1.15,
     portfolioSortedBy: "netvalDsc",
     priceChangePeriod: "24h",
     updateInterval: 5 * 1000 * 60,
-    totalValSnapshotInterval: 1000 * 60 * 10,
-    apiList: ["coingecko"],
-    networkMode: "single",
-    colorScheme: {
-        current: "default",
-        default: {
-            "--page-bg-color": "#590E79",
-            "--main-color": "#3e1350",
-            "---secondary-color": "#091919",
-            "--main-font-color": "#d3dbe6",
-        },
-        custom: {
-            "--page-bg-color": "#590E79",
-            "--main-color": "#3e1350",
-            "---secondary-color": "#091919",
-            "--main-font-color": "#d3dbe6",
-        },
-    },
 
-    currentCurrencies: {
-        main: "USD",
-        second: "BTC",
-    },
+    currentCurrencies: ["USD", "BTC"],
 }
 
 export default function(state = settings, action) {
@@ -34,6 +13,16 @@ export default function(state = settings, action) {
             if (!action.payload) return { ...state }
             return { ...state, priceChangePeriod: action.payload }
         }
+        case "CHANGE_SYNC_INTERVAL": {
+            return { ...state, updateInterval: action.payload }
+        }
+        case "REMOVE_VERSUS_CURRENCY": {
+            return { ...state, currentCurrencies: state.currentCurrencies.filter(e => e !== action.payload) }
+        }
+        case "ADD_VERSUS_CURRENCY": {
+            return { ...state, currentCurrencies: [...state.currentCurrencies, action.payload] }
+        }
+
         default:
             return state
     }

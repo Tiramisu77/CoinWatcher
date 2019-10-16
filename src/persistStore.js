@@ -1,28 +1,52 @@
 let stateCompare = {
     portfolio: null,
+    settings: null,
 }
 
-function savePortfolio(portfolio) {
-    if (portfolio !== null && portfolio !== undefined) localStorage.setItem("portfolio", JSON.stringify(portfolio))
+function saveItem(key, val) {
+    if (val !== null && val !== undefined) localStorage.setItem(key, JSON.stringify(val))
 }
 
 function comparePortfolio(portfolio) {
     if (stateCompare.portfolio !== portfolio) {
-        savePortfolio(portfolio)
+        saveItem("portfolio", portfolio)
         stateCompare.portfolio = portfolio
     }
 }
 
-export const persistStore = function(store) {
-    comparePortfolio(store.portfolio)
+function compareSettings(settings) {
+    if (stateCompare.settings !== settings) {
+        saveItem("settings", settings)
+        stateCompare.settings = settings
+    }
 }
 
-function loadItem(key, type) {
-    return JSON.parse(localStorage.getItem(key) || (type === "arr" ? "[]" : "{}"))
+export const persistStore = function(store) {
+    let { portfolio, settings } = store
+    comparePortfolio(portfolio)
+    compareSettings(settings)
+}
+
+function loadItem(key) {
+    let item = localStorage.getItem(key)
+    if (item) {
+        return JSON.parse(item)
+    } else return item
 }
 
 export const hydrate = function() {
-    let portfolio = loadItem("portfolio", "obj")
+    let res = {}
+    let portfolio = loadItem("portfolio")
+    let settings = loadItem("settings")
 
-    return { portfolio }
+    res.portfolio = portfolio
+    res.settings = settings
+
+    for (let key in res) {
+        if (!res[key]) {
+            delete res[key]
+        }
+    }
+
+    return res
 }

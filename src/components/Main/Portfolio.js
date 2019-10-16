@@ -1,9 +1,9 @@
 import React from "react"
 import PortfolioItem from "./PortfolioItem"
-import getPortfolio from "../../redux/selectors/getPortfolio"
+
 import { connect } from "react-redux"
 
-const PortfolioView = function({ portfolio }) {
+const Portfolio = function({ portfolio }) {
     return (
         <div id="portfolio" className="table">
             {portfolio.map(({ amount, id }) => {
@@ -14,8 +14,8 @@ const PortfolioView = function({ portfolio }) {
 }
 
 const mapStateToProps = function(state) {
-    const portfolio = getPortfolio(state)
+    const portfolio = Object.keys(state.portfolio).map(key => state.portfolio[key])
     return { portfolio }
 }
 
-export default connect(mapStateToProps)(PortfolioView)
+export default connect(mapStateToProps)(Portfolio)

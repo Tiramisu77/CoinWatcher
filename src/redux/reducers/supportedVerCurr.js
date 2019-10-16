@@ -1,8 +1,7 @@
 export default function(state = [], action) {
     switch (action.type) {
-        case "SET_VERSUS_CURRENCIES": {
-            const versusCurrencies = action.payload
-            return versusCurrencies
+        case "SET_SUPPORTED_VER_CURRENCIES": {
+            return action.payload
         }
         default:
             return state

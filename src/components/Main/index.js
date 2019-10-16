@@ -4,7 +4,7 @@ import "./main.css"
 import TotalValue from "./TotalValue"
 import PortfolioLegend from "./PortfolioLegend"
 
-import PortfolioView from "./PortfolioView"
+import Portfolio from "./Portfolio"
 
 import ChangePeriodButtons from "./ChangePeriodButtons"
 
@@ -13,7 +13,7 @@ export default function Main() {
         <div id="main">
             <TotalValue />
             <PortfolioLegend />
-            <PortfolioView />
+            <Portfolio />
             <ChangePeriodButtons />
         </div>
     )
