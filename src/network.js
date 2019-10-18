@@ -12,6 +12,15 @@ const validateListItem = function(listItem) {
     return listItem
 }
 
+export const getItemData = async id => {
+    return fetch(
+        `https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
+    ).then(response => {
+        if (response.ok) return response.json()
+        else return Promise.reject(response.status)
+    })
+}
+
 export const loadSupportedCoins = async function() {
     try {
         let res = await fetch(`https://api.coingecko.com/api/v3/coins/list`).then(response => {

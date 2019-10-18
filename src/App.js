@@ -7,7 +7,8 @@ import { connect } from "react-redux"
 
 import { setSupportedVerCurr } from "./redux/actions/supportedVerCurr"
 import { setSupportedCoins } from "./redux/actions/supportedCoins"
-import { loadVersusCurrencies, loadSupportedCoins } from "./network"
+import { setItemApiData } from "./redux/actions/apiData"
+import { loadVersusCurrencies, loadSupportedCoins, getItemData } from "./network"
 
 class App extends React.Component {
     constructor(props) {
@@ -15,6 +16,8 @@ class App extends React.Component {
 
         this.loadSupportedVerCurr()
         this.loadSupportedCoins()
+
+        this.getMarketData()
     }
     async loadSupportedCoins() {
         let supportedCoins = await loadSupportedCoins()
@@ -22,8 +25,20 @@ class App extends React.Component {
     }
 
     async loadSupportedVerCurr() {
-        let verCurr = await loadVersusCurrencies()
+        let verCurr = await loadVersusCurrencies().then(r => r.sort((a, b) => a.localeCompare(b)))
         this.props.setSupportedVerCurr(verCurr)
+    }
+
+    async getMarketData() {
+        for (let id in this.props.portfolio) {
+            getItemData(id).then(data => {
+                let { image, market_data, symbol } = data
+                this.props.setItemApiData({
+                    id,
+                    data: { image: image.small, market_data, symbol: symbol.toUpperCase() },
+                })
+            })
+        }
     }
 
     render() {
@@ -40,6 +55,8 @@ class App extends React.Component {
 }
 
 export default connect(
-    null,
-    { setSupportedVerCurr, setSupportedCoins }
+    state => {
+        return { portfolio: state.portfolio }
+    },
+    { setSupportedVerCurr, setSupportedCoins, setItemApiData }
 )(App)

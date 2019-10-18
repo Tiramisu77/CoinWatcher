@@ -3,7 +3,6 @@ const settings = {
     portfolioSortedBy: "netvalDsc",
     priceChangePeriod: "24h",
     updateInterval: 5 * 1000 * 60,
-
     currentCurrencies: ["USD", "BTC"],
 }
 
@@ -21,6 +20,9 @@ export default function(state = settings, action) {
         }
         case "ADD_VERSUS_CURRENCY": {
             return { ...state, currentCurrencies: [...state.currentCurrencies, action.payload] }
+        }
+        case "CHANGE_PORTFOLIO_SORT": {
+            return { ...state, portfolioSortedBy: action.payload }
         }
 
         default:

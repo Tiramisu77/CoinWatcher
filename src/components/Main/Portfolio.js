@@ -1,21 +1,22 @@
 import React from "react"
 import PortfolioItem from "./PortfolioItem"
 
-import { connect } from "react-redux"
-
-const Portfolio = function({ portfolio }) {
+export default function Portfolio({ portfolio }) {
     return (
         <div id="portfolio" className="table">
-            {portfolio.map(({ amount, id }) => {
-                return <PortfolioItem key={id} amount={amount} id={id} />
+            {portfolio.map(({ amount, id, image, symbol, prices, values }) => {
+                return (
+                    <PortfolioItem
+                        key={id}
+                        amount={amount}
+                        id={id}
+                        image={image}
+                        symbol={symbol}
+                        prices={prices}
+                        values={values}
+                    />
+                )
             })}
         </div>
     )
 }
-
-const mapStateToProps = function(state) {
-    const portfolio = Object.keys(state.portfolio).map(key => state.portfolio[key])
-    return { portfolio }
-}
-
-export default connect(mapStateToProps)(Portfolio)

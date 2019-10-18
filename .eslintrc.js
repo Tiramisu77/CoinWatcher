@@ -4,7 +4,7 @@ module.exports = {
         browser: true,
     },
 
-    extends: ["eslint:recommended", "plugin:security/recommended", "plugin:react/recommended"],
+    extends: ["eslint:recommended", "plugin:react/recommended"],
     parserOptions: {
         ecmaVersion: 2017,
         ecmaFeatures: { experimentalObjectRestSpread: true },
@@ -33,6 +33,6 @@ module.exports = {
             { name: "Link", linkAttribute: "to" },
         ],
     },
-    plugins: ["security", "react"],
+    plugins: ["react"],
     rules: { "no-console": "off", "no-var": ["error"], "react/prop-types": [0] },
 }

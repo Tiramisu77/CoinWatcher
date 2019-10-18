@@ -25,3 +25,10 @@ export const addVersusCurrency = function(currency) {
         payload: currency,
     }
 }
+
+export const sortPortfolioBy = function(option) {
+    return {
+        type: "CHANGE_PORTFOLIO_SORT",
+        payload: option,
+    }
+}
