@@ -34,12 +34,13 @@ function addPrices(id, settings, apiData) {
             prices: currentCurrencies.map(verCurr => {
                 return { verCurr, price: 0, change: 0 }
             }),
+            market_cap_rank: 0,
         }
     }
-    let { market_data } = apiData[id]
+    let { market_data, market_cap_rank } = apiData[id]
     let prices = currentCurrencies.map(currency => getPriceAndChange(market_data, currency, priceChangePeriod))
 
-    return { prices }
+    return { prices, market_cap_rank }
 }
 
 function addValues(item) {
@@ -60,7 +61,7 @@ function addValues(item) {
 
 function addApiData(item, apiData) {
     if (!apiData[item.id]) {
-        return {}
+        return { symbol: item.id }
     }
 
     return { image: apiData[item.id].image, symbol: apiData[item.id].symbol }
@@ -79,6 +80,32 @@ const mapStateToProps = function(state) {
         })
         .map(item => {
             return { ...item, ...addValues(item) }
+        })
+        .sort((item1, item2) => {
+            switch (settings.portfolioSortedBy) {
+                case "alphaAsc": {
+                    return item1.symbol.localeCompare(item2.symbol)
+                }
+
+                case "alphaDsc": {
+                    return item2.symbol.localeCompare(item1.symbol)
+                }
+                case "marketcapAsc": {
+                    return item1.market_cap_rank - item2.market_cap_rank
+                }
+                case "marketcapDsc": {
+                    return item2.market_cap_rank - item1.market_cap_rank
+                }
+                case "netvalAsc": {
+                    return item1.values[0].value - item2.values[0].value
+                }
+                case "netvalDsc": {
+                    return item2.values[0].value - item1.values[0].value
+                }
+
+                default:
+                    return 1
+            }
         })
 
     return { portfolio }

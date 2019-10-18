@@ -32,10 +32,10 @@ class App extends React.Component {
     async getMarketData() {
         for (let id in this.props.portfolio) {
             getItemData(id).then(data => {
-                let { image, market_data, symbol } = data
+                let { image, market_data, symbol, market_cap_rank } = data
                 this.props.setItemApiData({
                     id,
-                    data: { image: image.small, market_data, symbol: symbol.toUpperCase() },
+                    data: { image: image.small, market_data, symbol: symbol.toUpperCase(), market_cap_rank },
                 })
             })
         }
