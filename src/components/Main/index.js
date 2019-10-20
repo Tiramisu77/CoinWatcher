@@ -57,7 +57,7 @@ function addValues(item) {
             }
         }),
     }
-}
+} 
 
 function addApiData(item, apiData) {
     if (!apiData[item.id]) {

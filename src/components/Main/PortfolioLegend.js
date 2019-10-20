@@ -35,7 +35,6 @@ function PortfolioLegend({ portfolioSortedBy, sortPortfolioBy }) {
                             }
                         }}
                     >
-                        {" "}
                         {portfolioSortedBy === "marketcapAsc"
                             ? "prices ↑"
                             : portfolioSortedBy === "marketcapDsc"

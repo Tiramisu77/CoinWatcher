@@ -56,18 +56,18 @@ class VersusCurrencyManager extends React.Component {
                     data-val={"don't hide me"}
                     style={{ display: this.state.showSelect ? "block" : "none" }}
                 >
-                    {this.props.supportedVerCurr.map((curr, i) => {
+                    {this.props.supportedVerCurr.map(curr => {
                         return (
-                            <div key={i} data-val={curr} onClick={this.onSelect}>
+                            <div key={curr} data-val={curr} onClick={this.onSelect}>
                                 {curr}
                             </div>
                         )
                     })}
                 </div>
-                {this.props.currentCurrencies.map((currency, i) => {
+                {this.props.currentCurrencies.map(currency => {
                     return (
                         <VersusCurrency
-                            key={i}
+                            key={currency}
                             name={currency}
                             data-curr={currency}
                             remover={() => {

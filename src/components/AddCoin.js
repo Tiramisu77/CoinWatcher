@@ -16,9 +16,9 @@ class AutoCompleteSuggestion extends React.Component {
                     this.props.clickHandler(event.target.dataset.val)
                 }}
             >
-                {this.props.autoCompleteItems.map((item, i) => {
+                {this.props.autoCompleteItems.map((item) => {
                     return (
-                        <div className="autocomplete-item" key={i} data-val={item}>
+                        <div className="autocomplete-item" key={item} data-val={item}>
                             {item}
                         </div>
                     )
