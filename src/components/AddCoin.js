@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom"
 import { connect } from "react-redux"
 import { addItem } from "../redux/actions/portfolio"
 import "./css/AddCoin.css"
@@ -16,7 +17,7 @@ class AutoCompleteSuggestion extends React.Component {
                     this.props.clickHandler(event.target.dataset.val)
                 }}
             >
-                {this.props.autoCompleteItems.map((item) => {
+                {this.props.autoCompleteItems.map(item => {
                     return (
                         <div className="autocomplete-item" key={item} data-val={item}>
                             {item}
@@ -149,9 +150,10 @@ class AddCoin extends React.Component {
                         <div className="confirm-add-container">
                             {" "}
                             <div className="confirm-add btn" onClick={this.handleAddItem}>
-                                {" "}
-                                ADD{" "}
-                            </div>{" "}
+                                <Link to={{ pathname: "/" }} className="link-no-decor">
+                                    ADD
+                                </Link>
+                            </div>
                         </div>
                     </form>
                 </div>

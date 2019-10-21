@@ -90,7 +90,6 @@
     justify-content: center;
 }
 .coin-logo-big {
-    display: none;
     width: 3rem;
     height: auto;
     vertical-align: middle;
@@ -112,7 +111,7 @@
     display: grid;
     grid-template-columns: auto auto;
     grid-column-gap: 10px;
-    grid-row-gap: 4px;
+    grid-row-gap: 6px;
     margin: 6px;
 }
 .k {

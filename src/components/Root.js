@@ -17,9 +17,7 @@ export default function Root() {
                 <Route path="/AddCoin">
                     <AddCoin />
                 </Route>
-                <Route path="/CoinDetails">
-                    <CoinDetails />
-                </Route>
+                <Route path="/CoinDetails" component={CoinDetails} />
                 <Route path="/Settings">
                     <Settings />
                 </Route>

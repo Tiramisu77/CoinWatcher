@@ -32,7 +32,7 @@ export class SupportedCoins {
         let names = this.names.filter(name => reg.test(name))
         let symbols = this.symbols.filter(symbol => reg.test(symbol)).map(e => e.toUpperCase())
 
-        return [...names, ...symbols]
+        return [...new Set([...names, ...symbols])]
     }
 
     getNameFromQuery(str) {

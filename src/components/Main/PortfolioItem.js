@@ -23,7 +23,7 @@ export default function PortfolioItem({ id, amount, image, symbol, prices, value
                     let { str: changeStr, color } = numToFormattedString(change, { type: "percentage", isChange: true })
 
                     return (
-                        <div key={changeStr} className="table-cell">
+                        <div key={verCurr} className="table-cell">
                             <div>{priceStr}</div>
                             <div style={{ color }}>{changeStr} </div>
                         </div>
@@ -32,7 +32,7 @@ export default function PortfolioItem({ id, amount, image, symbol, prices, value
             </div>
 
             <div className="table-cell item-values">
-                {values.map((e, i) => {
+                {values.map(e => {
                     let { verCurr, value, change } = e
                     let { str: valueStr } = numToFormattedString(value, {
                         type: "currency",
@@ -46,7 +46,7 @@ export default function PortfolioItem({ id, amount, image, symbol, prices, value
                     })
 
                     return (
-                        <div key={changeStr} className="table-cell">
+                        <div key={verCurr} className="table-cell">
                             <div>{valueStr}</div>
                             <div style={{ color }}>{changeStr} </div>
                         </div>

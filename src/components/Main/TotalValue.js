@@ -29,7 +29,7 @@ export default function TotalValue({ portfolio }) {
 
     return (
         <div id="networth">
-            {totalValues.map((totalValue, i) => {
+            {totalValues.map(totalValue => {
                 let { value, change, verCurr, changePerc } = totalValue
                 let { str: valueStr } = numToFormattedString(value, {
                     type: "currency",
@@ -46,7 +46,7 @@ export default function TotalValue({ portfolio }) {
                     isChange: true,
                 })
                 return (
-                    <div key={i}>
+                    <div key={verCurr}>
                         <div className="total-val">{valueStr}</div>
                         <div>
                             <span className="net-changes change-perc" style={{ color: percColor }}>

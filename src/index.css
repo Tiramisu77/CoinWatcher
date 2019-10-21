@@ -229,6 +229,6 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .link-no-decor {
-    color: var(--main-font-color);
+    color: inherit;
     text-decoration: none;
 }

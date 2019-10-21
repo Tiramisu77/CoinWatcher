@@ -1,4 +1,4 @@
-let stateCompare = {
+let oldStore = {
     portfolio: null,
     settings: null,
 }
@@ -8,16 +8,16 @@ function saveItem(key, val) {
 }
 
 function comparePortfolio(portfolio) {
-    if (stateCompare.portfolio !== portfolio) {
+    if (oldStore.portfolio !== portfolio) {
         saveItem("portfolio", portfolio)
-        stateCompare.portfolio = portfolio
+        oldStore.portfolio = portfolio
     }
 }
 
 function compareSettings(settings) {
-    if (stateCompare.settings !== settings) {
+    if (oldStore.settings !== settings) {
         saveItem("settings", settings)
-        stateCompare.settings = settings
+        oldStore.settings = settings
     }
 }
 
@@ -31,22 +31,9 @@ function loadItem(key) {
     let item = localStorage.getItem(key)
     if (item) {
         return JSON.parse(item)
-    } else return item
+    } else return undefined
 }
 
 export const hydrate = function() {
-    let res = {}
-    let portfolio = loadItem("portfolio")
-    let settings = loadItem("settings")
-
-    res.portfolio = portfolio
-    res.settings = settings
-
-    for (let key in res) {
-        if (!res[key]) {
-            delete res[key]
-        }
-    }
-
-    return res
+    return { portfolio: loadItem("portfolio"), settings: loadItem("settings") }
 }
