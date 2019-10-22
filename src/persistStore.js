@@ -1,30 +1,35 @@
+import { debounce } from "./lib"
+
 let oldStore = {
     portfolio: null,
     settings: null,
+    alerts: null,
 }
 
 function saveItem(key, val) {
     if (val !== null && val !== undefined) localStorage.setItem(key, JSON.stringify(val))
 }
 
-function comparePortfolio(portfolio) {
-    if (oldStore.portfolio !== portfolio) {
-        saveItem("portfolio", portfolio)
-        oldStore.portfolio = portfolio
+function comparator(key, value) {
+    if (oldStore[key] !== value) {
+        saveItem(key, value)
+        oldStore[key] = value
     }
 }
 
-function compareSettings(settings) {
-    if (oldStore.settings !== settings) {
-        saveItem("settings", settings)
-        oldStore.settings = settings
-    }
-}
+const persistStore = debounce(function(store) {
+    let { portfolio, settings, alerts } = store
+    comparator("portfolio", portfolio)
+    comparator("settings", settings)
+    comparator("alerts", alerts)
+}, 3000)
 
-export const persistStore = function(store) {
-    let { portfolio, settings } = store
-    comparePortfolio(portfolio)
-    compareSettings(settings)
+export const persistStoreMiddleware = function({ getState }) {
+    return next => action => {
+        const returnValue = next(action)
+        persistStore(getState())
+        return returnValue
+    }
 }
 
 function loadItem(key) {
@@ -35,5 +40,5 @@ function loadItem(key) {
 }
 
 export const hydrate = function() {
-    return { portfolio: loadItem("portfolio"), settings: loadItem("settings") }
+    return { portfolio: loadItem("portfolio"), settings: loadItem("settings"), alerts: loadItem("alerts") }
 }

@@ -3,7 +3,7 @@ import { Switch, Route } from "react-router-dom"
 
 import Main from "./Main/"
 import AddCoin from "./AddCoin"
-import CoinDetails from "./CoinDetails"
+import CoinDetails from "./CoinDetails/"
 import Settings from "./Settings"
 import About from "./About"
 

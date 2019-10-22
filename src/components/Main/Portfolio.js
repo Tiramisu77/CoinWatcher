@@ -20,6 +20,6 @@ export default function Portfolio({ portfolio }) {
                     </Link>
                 )
             })}
-        </div>
+        </div> 
     )
 }

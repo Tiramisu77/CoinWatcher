@@ -1,19 +1,31 @@
-import React from "react"
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
 
-import "./css/CoinDetails.css"
-import { removeItem, changeAmount } from "../redux/actions/portfolio"
+import "./CoinDetails.css"
+import { removeItem, changeAmount } from "../../redux/actions/portfolio"
 import { connect } from "react-redux"
-import { getFullItem } from "../redux/selectors"
-import { numToFormattedString } from "../lib"
-import { Trashcan } from "./assets"
+import { getFullItem } from "../../redux/selectors"
+import { numToFormattedString } from "../../lib"
+import { Trashcan, Bell } from "./assets"
+import NewAlertModal from "./NewAlertModal"
 
 function CoinDetails({ removeItem, changeAmount, location, fullItem }) {
     const { id } = location.state
     const { name, image, symbol, amount, prices, values } = fullItem
+    const [showModal, toggleModal] = useState(false)
+
     return (
         <div className="page-container">
-            <div className="modal-container" />
+            {showModal && (
+                <div className="modal-container">
+                    <NewAlertModal
+                        hide={() => {
+                            toggleModal(false)
+                        }}
+                        currencyId={id}
+                    />
+                </div>
+            )}
 
             <div id="coin-details">
                 <div className="details-data-container">
@@ -64,7 +76,7 @@ function CoinDetails({ removeItem, changeAmount, location, fullItem }) {
 
                     <div className="market-data-details-container">
                         <div className="market-data-details">
-                            <div className="k">Price:</div>{" "}
+                            <div className="k">Price:</div>
                             <div className="v details-prices">
                                 {prices.map(e => {
                                     let { verCurr, price } = e
@@ -99,7 +111,28 @@ function CoinDetails({ removeItem, changeAmount, location, fullItem }) {
                         </div>
                     </div>
 
-                    <div className="coin-details-alerts-container" />
+                    <div className="coin-details-alerts-container">
+                        <div className="coin-details-alerts">
+                            <div className="alert-title">
+                                Alerts <Bell />
+                            </div>
+                            <div className="alert-container">
+                                <div className="price-alerts-container"> </div>
+                                <div className="perc-alerts-container"> </div>
+                                <div> </div>
+                            </div>
+                            <div className="errormsg" style={{ color: "red", justifySelf: "center" }} />
+                            <div
+                                className="add-alert btn"
+                                style={{ justifySelf: "center", width: "80px" }}
+                                onClick={() => {
+                                    toggleModal(true)
+                                }}
+                            >
+                                new alert
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="message" style={{ color: "red", textAlign: "center" }} />

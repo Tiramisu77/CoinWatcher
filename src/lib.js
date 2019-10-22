@@ -94,3 +94,21 @@ export const numToFormattedString = function(num, options) {
 
     return { str, color }
 }
+
+export const createId = function() {
+    return (
+        "_" +
+        Math.random()
+            .toString(36)
+            .substr(2, 9)
+    )
+}
+
+export const debounce = function(func, limit) {
+    let timeoudId = null
+
+    return function(...args) {
+        clearTimeout(timeoudId)
+        timeoudId = setTimeout(() => func.call(this, ...args), limit)
+    }
+}
