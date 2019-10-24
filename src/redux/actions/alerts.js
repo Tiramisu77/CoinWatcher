@@ -11,3 +11,10 @@ export const removeAlert = function(alert) {
         payload: alert,
     }
 }
+
+export const changeAlert = function(alert){
+  return {
+      type: "CHANGE_ALERT",
+      payload: alert,
+  }
+}

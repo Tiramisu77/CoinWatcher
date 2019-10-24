@@ -1,4 +1,4 @@
-import { debounce } from "./lib"
+import { throttle } from "./lib"
 
 let oldStore = {
     portfolio: null,
@@ -17,7 +17,7 @@ function comparator(key, value) {
     }
 }
 
-const persistStore = debounce(function(store) {
+const persistStore = throttle(function(store) {
     let { portfolio, settings, alerts } = store
     comparator("portfolio", portfolio)
     comparator("settings", settings)

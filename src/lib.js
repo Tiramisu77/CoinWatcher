@@ -2,6 +2,17 @@ const SATOSHIS_IN_BTC = 100000000
 const MBTC_IN_BTC = 1000
 const lang = navigator.languages ? navigator.languages[0] : navigator.language ? navigator.language : "en-US"
 
+const ONE_HOUR = 1000 * 60 * 60
+const ONE_DAY = ONE_HOUR * 24
+
+export const timeStrToMS = function timeStrToMS(timeStr) {
+    let [, num, time] = timeStr.match(/(\d*)(.)/)
+    num = parseInt(num)
+    time = time === "h" ? ONE_HOUR : time === "d" ? ONE_DAY : null
+    if (time === null) return null
+    else return num * time
+}
+
 const autoConvert = function(btcNum) {
     if (typeof btcNum !== "number" || isNaN(btcNum)) {
         throw new Error("btc converter expected a number, instead got: " + btcNum)
@@ -104,11 +115,32 @@ export const createId = function() {
     )
 }
 
+export const throttle = function(func, limit) {
+    let timeoudId = null
+    let lastTimeCalled = 0
+    return function(...args) {
+        if (Date.now() - lastTimeCalled > limit) {
+            func.call(this, ...args)
+            lastTimeCalled = Date.now()
+            return
+        }
+
+        clearTimeout(timeoudId)
+        timeoudId = setTimeout(() => func.call(this, ...args), limit)
+        lastTimeCalled = Date.now()
+    }
+}
+
 export const debounce = function(func, limit) {
     let timeoudId = null
 
     return function(...args) {
         clearTimeout(timeoudId)
+        args.forEach(arg => {
+            if (arg.persist) {
+                arg.persist()
+            }
+        })
         timeoudId = setTimeout(() => func.call(this, ...args), limit)
     }
 }

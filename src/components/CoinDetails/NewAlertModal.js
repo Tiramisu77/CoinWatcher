@@ -22,18 +22,25 @@ function NewAlertReducer(state, action) {
         case "PRICE": {
             return { ...state, price: payload }
         }
+
+        case "PERC_CHANGE": {
+            return { ...state, percChange: payload }
+        }
+
         default:
             throw new Error("unrecognized action")
     }
 }
 
-function NewAlertModal({ currencyId, hide, defaultCurrency, addAlert, allPrices }) {
+function _NewAlertModal({ currencyId, name, hide, defaultCurrency, addAlert, allPrices }) {
     const [state, dispatch] = useReducer(NewAlertReducer, {
         type: "price",
-        price: 0,
+        price: allPrices[defaultCurrency.toLowerCase()] || 0,
+        name,
         percChange: 0,
         period: "1h",
         verCurr: defaultCurrency,
+        lastTimeFired: 0,
     })
 
     return (
@@ -60,7 +67,7 @@ function NewAlertModal({ currencyId, hide, defaultCurrency, addAlert, allPrices 
                         name="amount"
                         id="target-alert-inp"
                         size={16}
-                        value={state.price || allPrices[defaultCurrency.toLowerCase()] || 0}
+                        value={state.price}
                         onChange={event => {
                             dispatch({ type: "PRICE", payload: Number(event.target.value) })
                         }}
@@ -79,6 +86,10 @@ function NewAlertModal({ currencyId, hide, defaultCurrency, addAlert, allPrices 
                         name="amount"
                         id="perc-alert-inp"
                         size={16}
+                        value={state.percChange}
+                        onChange={() => {
+                            dispatch({ type: "PERC_CHANGE", payload: Number(event.target.value) })
+                        }}
                     />
                 </>
             )}
@@ -108,27 +119,30 @@ function NewAlertModal({ currencyId, hide, defaultCurrency, addAlert, allPrices 
                 />
             </div>
             <div className="btn cancel" onClick={hide}>
-                {" "}
-                cancel{" "}
-            </div>{" "}
+                cancel
+            </div>
             <div
                 className="btn ok"
                 onClick={() => {
                     hide()
-                    addAlert({ ...state, id: createId(), currencyId })
+                    if (state.type === "perc") {
+                        let { type, percChange, period, verCurr, lastTimeFired, name } = state
+                        addAlert({ type, percChange, period, verCurr, name, id: createId(), currencyId, lastTimeFired })
+                    } else {
+                        let { type, price, verCurr, name } = state
+                        let priceOnCreation = allPrices[verCurr.toLowerCase()] || 0
+                        addAlert({ type, price, name, priceOnCreation, verCurr, id: createId(), currencyId })
+                    }
                 }}
             >
-                {" "}
-                ok{" "}
+                ok
             </div>
         </div>
     )
 }
-export default connect(
-    (store, ownProps) => {
-        let { currencyId } = ownProps
-        let allPrices = store.apiData[currencyId] ? store.apiData[currencyId].market_data.current_price : {}
-        return { defaultCurrency: store.settings.currentCurrencies[0], allPrices }
+export const NewAlertModal = connect(
+    store => {
+        return { defaultCurrency: store.settings.currentCurrencies[0] }
     },
     { addAlert }
-)(NewAlertModal)
+)(_NewAlertModal)

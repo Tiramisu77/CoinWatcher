@@ -8,7 +8,7 @@ export const changePriceChangePeriod = function(period) {
 export const changeSyncInterval = function(interval) {
     return {
         type: "CHANGE_SYNC_INTERVAL",
-        payload: Number(interval) * 1000 * 60,
+        payload: Number(interval),
     }
 }
 

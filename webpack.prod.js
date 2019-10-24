@@ -13,7 +13,11 @@ module.exports = {
             template: "./src/index.html",
             filename: "./index.html",
         }),
-        new CopyPlugin([{ from: "./src/service-worker.js", to: "" }]),
+        new CopyPlugin([
+            { from: "./src/service-worker.js", to: "" },
+            { from: "./public/images", to: "images" },
+            { from: "./public/manifest.json", to: "" },
+        ]),
     ],
 
     mode: "development",

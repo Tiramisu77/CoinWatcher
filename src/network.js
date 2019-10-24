@@ -31,7 +31,7 @@ export const loadSupportedCoins = async function() {
         return res
     } catch (error) {
         if (window.DEBUG) console.error(error)
-        return "not ok"
+        return Promise.reject(error)
     }
 }
 

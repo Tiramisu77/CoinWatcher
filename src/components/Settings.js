@@ -121,10 +121,14 @@ class Settings extends React.Component {
                     <div className="settings-item">
                         <span>Sync interval:</span>
                         <span className="setting-item-padder"> </span>
-                        <select id="update-interval-select" onChange={this.handleChange}>
-                            <option value={2}>2 min</option>
-                            <option value={5}>5 min</option>
-                            <option value={15}>15 min</option>
+                        <select
+                            id="update-interval-select"
+                            onChange={this.handleChange}
+                            value={this.props.updateInterval}
+                        >
+                            <option value={2 * 60 * 1000}>2 min</option>
+                            <option value={5 * 60 * 1000}>5 min</option>
+                            <option value={15 * 60 * 1000}>15 min</option>
                         </select>
                     </div>
                     <div className="settings-item">
@@ -140,6 +144,8 @@ class Settings extends React.Component {
 }
 
 export default connect(
-    null,
+    store => {
+        return { updateInterval: store.settings.updateInterval }
+    },
     { changeSyncInterval }
 )(Settings)
