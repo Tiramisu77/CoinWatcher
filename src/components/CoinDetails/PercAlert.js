@@ -28,7 +28,7 @@ export const PercAlert = connect(
                 className="period-select"
                 value={period}
                 onChange={event => {
-                    let newState = { ...percAlert, period: event.target.value }
+                    let newState = { ...percAlert, period: event.target.value, lastTimeFired: 0 }
                     changeAlert(newState)
                 }}
             >

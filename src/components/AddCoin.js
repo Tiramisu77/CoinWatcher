@@ -2,6 +2,8 @@ import React from "react"
 import { Link } from "react-router-dom"
 import { connect } from "react-redux"
 import { addItem } from "../redux/actions/portfolio"
+import { setItemApiData } from "../redux/actions/apiData"
+import { getItemData } from "../network"
 import "./css/AddCoin.css"
 
 class AutoCompleteSuggestion extends React.Component {
@@ -44,7 +46,8 @@ class AddCoin extends React.Component {
         this.deriveAutoComplete = this.deriveAutoComplete.bind(this)
         this.updateFullName = this.updateFullName.bind(this)
         this.updateCoin = this.updateCoin.bind(this)
-
+        this.coinInp = React.createRef()
+        this.amountInp = React.createRef()
         document.addEventListener("click", this.docClickListener)
     }
 
@@ -65,9 +68,31 @@ class AddCoin extends React.Component {
         this.setState({ amount })
     }
 
-    handleAddItem() {
-        this.props.addItem({ id: this.props.supportedCoins.getIdFromQuery(this.state.coin), amount: this.state.amount })
+    async handleAddItem(event) {
+        let { coin, amount } = this.state
+
+        if (coin === "") {
+            this.coinInp.current.focus()
+            event.preventDefault()
+            return
+        }
+
+        if (amount === "") {
+            this.amountInp.current.focus()
+            event.preventDefault()
+
+            return
+        }
+
+        let id = this.props.supportedCoins.getIdFromQuery(this.state.coin)
+        this.props.addItem({ id, amount: this.state.amount })
         this.setState({ coin: "", amount: "" })
+        try {
+            let data = await getItemData(id)
+            this.props.setItemApiData({ id, data })
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     showAutoComplete() {
@@ -123,6 +148,7 @@ class AddCoin extends React.Component {
                                         this.deriveAutoComplete()
                                     }}
                                     value={this.state.coin}
+                                    ref={this.coinInp}
                                 />
                                 <AutoCompleteSuggestion
                                     show={this.state.showAutoComplete ? "block" : "none"}
@@ -142,6 +168,7 @@ class AddCoin extends React.Component {
                                 id="add-amount"
                                 onChange={e => this.updateAmount(e.target.value)}
                                 value={this.state.amount}
+                                ref={this.amountInp}
                             />
                         </div>
                         <div className="message" style={{ color: "red", textAlign: "center" }}>
@@ -149,11 +176,11 @@ class AddCoin extends React.Component {
                         </div>
                         <div className="confirm-add-container">
                             {" "}
-                            <div className="confirm-add btn" onClick={this.handleAddItem}>
-                                <Link to={{ pathname: "/" }} className="link-no-decor">
+                            <Link to={{ pathname: "/" }} className="link-no-decor">
+                                <div className="confirm-add btn" onClick={this.handleAddItem}>
                                     ADD
-                                </Link>
-                            </div>
+                                </div>
+                            </Link>
                         </div>
                     </form>
                 </div>
@@ -166,5 +193,5 @@ export default connect(
     function(store) {
         return { supportedCoins: store.supportedCoins }
     },
-    { addItem }
+    { addItem, setItemApiData }
 )(AddCoin)

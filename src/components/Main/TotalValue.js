@@ -1,5 +1,6 @@
 import React from "react"
 import { numToFormattedString } from "../../lib"
+import { ErrorBoundary } from "../ErrorBoundary"
 
 function getTotalValues(portfolio) {
     let totalValues = portfolio.reduce((acc, item) => {
@@ -29,8 +30,7 @@ export default function TotalValue({ portfolio }) {
 
     return (
         <div id="networth">
-            {totalValues.map(totalValue => {
-                let { value, change, verCurr, changePerc } = totalValue
+            {totalValues.map(({ value = 0, change = 0, verCurr = "USD", changePerc = 0 }) => {
                 let { str: valueStr } = numToFormattedString(value, {
                     type: "currency",
                     currency: verCurr.toUpperCase(),
@@ -47,16 +47,18 @@ export default function TotalValue({ portfolio }) {
                 })
                 return (
                     <div key={verCurr}>
-                        <div className="total-val">{valueStr}</div>
-                        <div>
-                            <span className="net-changes change-perc" style={{ color: percColor }}>
-                                {percStr}
-                            </span>
-                            <span className="net-changes">/</span>
-                            <span className="net-changes change-abs" style={{ color: changeColor }}>
-                                {changeStr}
-                            </span>
-                        </div>
+                        <ErrorBoundary>
+                            <div className="total-val">{valueStr}</div>
+                            <div>
+                                <span className="net-changes change-perc" style={{ color: percColor }}>
+                                    {percStr}
+                                </span>
+                                <span className="net-changes">/</span>
+                                <span className="net-changes change-abs" style={{ color: changeColor }}>
+                                    {changeStr}
+                                </span>
+                            </div>
+                        </ErrorBoundary>
                     </div>
                 )
             })}

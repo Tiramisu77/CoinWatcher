@@ -6,12 +6,15 @@ import TotalValue from "./TotalValue"
 import PortfolioLegend from "./PortfolioLegend"
 import Portfolio from "./Portfolio"
 import ChangePeriodButtons from "./ChangePeriodButtons"
+import { ErrorBoundary } from "../ErrorBoundary"
 import { getFullItem } from "../../redux/selectors"
 
 function Main({ portfolio }) {
     return (
         <div id="main">
-            <TotalValue portfolio={portfolio} />
+            <ErrorBoundary>
+                <TotalValue portfolio={portfolio} />
+            </ErrorBoundary>
             <PortfolioLegend />
             <Portfolio portfolio={portfolio} />
             <ChangePeriodButtons />

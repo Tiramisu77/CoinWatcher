@@ -1,6 +1,6 @@
 import React from "react"
 import { numToFormattedString } from "../../lib"
-
+import { ErrorBoundary } from "../ErrorBoundary"
 export default function PortfolioItem({ id, amount, image, symbol, prices, values }) {
     return (
         <div className="table-row">
@@ -24,8 +24,10 @@ export default function PortfolioItem({ id, amount, image, symbol, prices, value
 
                     return (
                         <div key={verCurr} className="table-cell">
-                            <div>{priceStr}</div>
-                            <div style={{ color }}>{changeStr} </div>
+                            <ErrorBoundary>
+                                <div>{priceStr}</div>
+                                <div style={{ color }}>{changeStr} </div>
+                            </ErrorBoundary>
                         </div>
                     )
                 })}
@@ -47,8 +49,10 @@ export default function PortfolioItem({ id, amount, image, symbol, prices, value
 
                     return (
                         <div key={verCurr} className="table-cell">
-                            <div>{valueStr}</div>
-                            <div style={{ color }}>{changeStr} </div>
+                            <ErrorBoundary>
+                                <div>{valueStr}</div>
+                                <div style={{ color }}>{changeStr} </div>
+                            </ErrorBoundary>
                         </div>
                     )
                 })}

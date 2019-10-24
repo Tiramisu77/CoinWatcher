@@ -29,10 +29,9 @@ async function loadAndSetMarketData(portfolio, setItemApiData) {
     for (let id in portfolio) {
         getItemData(id)
             .then(data => {
-                let { image, market_data, symbol, market_cap_rank, name } = data
                 setItemApiData({
                     id,
-                    data: { image: image.small, market_data, symbol: symbol.toUpperCase(), market_cap_rank, name },
+                    data,
                 })
             })
             .catch(e => {

@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { connect } from "react-redux"
 import { removeAlert, changeAlert } from "./redux/actions/alerts"
 import { numToFormattedString, timeStrToMS } from "./lib"
@@ -101,8 +102,7 @@ function afterPercAlert(percAlert, changeAlert) {
     changeAlert({ ...percAlert, lastTimeFired: Date.now() })
 }
 
-function _AlertSystem({ alerts, apiData, changeAlert, removeAlert }) {
-    let { priceAlerts, percAlerts } = alerts
+function processPriceAlerts(priceAlerts, apiData, removeAlert) {
     priceAlerts.forEach(alert => {
         let check = checkPriceAlert(alert, apiData)
         if (check) {
@@ -110,7 +110,9 @@ function _AlertSystem({ alerts, apiData, changeAlert, removeAlert }) {
             afterPriceAlert(alert, removeAlert)
         }
     })
+}
 
+function processPercAlerts(percAlerts, apiData, changeAlert) {
     let percAlertsMap = percAlerts.reduce((acc, alert) => {
         if (acc[alert.currencyId]) {
             acc[alert.currencyId].push(alert)
@@ -121,20 +123,41 @@ function _AlertSystem({ alerts, apiData, changeAlert, removeAlert }) {
     }, {})
 
     for (let key in percAlertsMap) {
+        //sort percentage alerts to only render the alert with the highest percChange value
+
         let sortedAlerts = percAlertsMap[key].sort(
             (alert1, alert2) => Math.abs(alert2.percChange) - Math.abs(alert1.percChange)
         )
 
+        /*
+        only render the first alert that checks out, but mark the rest alerts as handled
+        to prevent annoying multifires due to a sudden
+        */
+        let alertWasShown = false
         for (let alert of sortedAlerts) {
             let result = checkPercAlert(alert, apiData)
             if (result) {
                 let { percAlert, recentPriceChange, currentPrice } = result
-                renderPercAlert(percAlert, recentPriceChange, currentPrice)
+                if (!alertWasShown) {
+                    renderPercAlert(percAlert, recentPriceChange, currentPrice)
+                    alertWasShown = true
+                }
                 afterPercAlert(percAlert, changeAlert)
-                break
             }
         }
     }
+}
+
+function _AlertSystem({ alerts, apiData, changeAlert, removeAlert }) {
+    let { priceAlerts, percAlerts } = alerts
+
+    useEffect(
+        () => {
+            processPriceAlerts(priceAlerts, apiData, removeAlert)
+            processPercAlerts(percAlerts, apiData, changeAlert)
+        },
+        [apiData]
+    )
 
     return null
 }

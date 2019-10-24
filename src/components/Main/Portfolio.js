@@ -1,7 +1,7 @@
 import React from "react"
 import PortfolioItem from "./PortfolioItem"
 import { Link } from "react-router-dom"
-
+import { ErrorBoundary } from "../ErrorBoundary"
 export default function Portfolio({ portfolio }) {
     return (
         <div id="portfolio" className="table">
@@ -9,17 +9,19 @@ export default function Portfolio({ portfolio }) {
                 let { amount, id, image, symbol, prices, values } = item
                 return (
                     <Link key={id} to={{ pathname: "/CoinDetails", state: { id } }} className="link-no-decor">
-                        <PortfolioItem
-                            amount={amount}
-                            id={id}
-                            image={image}
-                            symbol={symbol}
-                            prices={prices}
-                            values={values}
-                        />
+                        <ErrorBoundary>
+                            <PortfolioItem
+                                amount={amount}
+                                id={id}
+                                image={image}
+                                symbol={symbol}
+                                prices={prices}
+                                values={values}
+                            />
+                        </ErrorBoundary>
                     </Link>
                 )
             })}
-        </div> 
+        </div>
     )
 }

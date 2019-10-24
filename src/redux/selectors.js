@@ -1,3 +1,8 @@
+function safeNum(num) {
+    if (typeof num === "number" && !isNaN(num)) return num
+    else return 0
+}
+
 function getApiData(item, apiData) {
     let { id } = item
     if (!apiData[item.id]) {
@@ -8,10 +13,12 @@ function getApiData(item, apiData) {
 }
 
 function getPriceAndChange(market_data, verCurr, period) {
+    let price = safeNum(market_data.current_price[verCurr])
+    let change = safeNum(market_data[`price_change_percentage_${period}_in_currency`][verCurr])
     return {
         verCurr,
-        price: market_data.current_price[verCurr],
-        change: market_data[`price_change_percentage_${period}_in_currency`][verCurr],
+        price,
+        change,
     }
 }
 
@@ -30,7 +37,7 @@ function getMarketData(item, settings, apiData) {
     let { market_data, market_cap_rank } = apiData[id]
     let prices = currentCurrencies.map(currency => getPriceAndChange(market_data, currency, priceChangePeriod))
 
-    return { prices, market_cap_rank }
+    return { prices, market_cap_rank: safeNum(market_cap_rank) }
 }
 
 function getValues(item, marketData) {
@@ -41,7 +48,7 @@ function getValues(item, marketData) {
             let value = price * amount
             return {
                 verCurr,
-                value,
+                value: safeNum(value),
                 change: value - value / (1 + change / 100),
             }
         }),
