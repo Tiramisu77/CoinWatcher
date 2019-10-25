@@ -51,13 +51,17 @@ async function priceUpdateLoop(portfolio, setItemApiData, updateInterval) {
 }
 
 function _MarketFetcher({ portfolio, settings, setSupportedVerCurr, setSupportedCoins, setItemApiData }) {
-    loadAndSetSupportedCoins(setSupportedCoins)
-    loadAndSetSupportedVerCurr(setSupportedVerCurr)
+    //run this once
+    useEffect(() => {
+        loadAndSetSupportedCoins(setSupportedCoins)
+        loadAndSetSupportedVerCurr(setSupportedVerCurr)
+    }, [])
+
     useEffect(
         () => {
             priceUpdateLoop(portfolio, setItemApiData, settings.updateInterval)
         },
-        [settings]
+        [settings.updateInterval]
     )
 
     return null

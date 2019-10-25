@@ -151,6 +151,7 @@ function processPercAlerts(percAlerts, apiData, changeAlert) {
 function _AlertSystem({ alerts, apiData, changeAlert, removeAlert }) {
     let { priceAlerts, percAlerts } = alerts
 
+    //only run the system when apiData changes, to create grace period for newly created alerts
     useEffect(
         () => {
             processPriceAlerts(priceAlerts, apiData, removeAlert)

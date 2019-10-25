@@ -2,6 +2,14 @@ import React from "react"
 import { numToFormattedString } from "../../lib"
 import { ErrorBoundary } from "../ErrorBoundary"
 
+function calculatePortfolioStructure(portfolioFullItems, totalValues) {
+    return portfolioFullItems.reduce((acc, item) => {
+        let { id, values } = item
+        acc[id] = values[0].value / totalValues[values[0].verCurr].value
+        return acc
+    }, {})
+}
+
 function getTotalValues(portfolio) {
     let totalValues = portfolio.reduce((acc, item) => {
         item.values.forEach(values => {
@@ -16,17 +24,21 @@ function getTotalValues(portfolio) {
         return acc
     }, {})
 
-    return Object.keys(totalValues)
+    let structure = calculatePortfolioStructure(portfolio, totalValues)
+
+    totalValues = Object.keys(totalValues)
         .map(key => totalValues[key])
         .map(totallValue => {
             let { value, change } = totallValue
             totallValue.changePerc = (change / (value - change)) * 100 || 0
             return totallValue
         })
+
+    return { structure, totalValues }
 }
 
 export default function TotalValue({ portfolio }) {
-    let totalValues = getTotalValues(portfolio)
+    let { totalValues, structure } = getTotalValues(portfolio)
 
     return (
         <div id="networth">

@@ -1,9 +1,9 @@
 import React from "react"
 import { Link } from "react-router-dom"
 import { connect } from "react-redux"
-import { addItem } from "../redux/actions/portfolio"
-import { setItemApiData } from "../redux/actions/apiData"
-import { getItemData } from "../network"
+import { addItem } from "@app/redux/actions/portfolio"
+import { setItemApiData } from "@app/redux/actions/apiData"
+import { getItemData } from "@app/network"
 import "./css/AddCoin.css"
 
 class AutoCompleteSuggestion extends React.Component {
@@ -48,6 +48,7 @@ class AddCoin extends React.Component {
         this.updateCoin = this.updateCoin.bind(this)
         this.coinInp = React.createRef()
         this.amountInp = React.createRef()
+        this.addButton = React.createRef()
         document.addEventListener("click", this.docClickListener)
     }
 
@@ -128,7 +129,14 @@ class AddCoin extends React.Component {
         return (
             <div className="page-container">
                 <div id="AddCoinWindow">
-                    <form id="add-coin-form">
+                    <form
+                        id="add-coin-form"
+                        onKeyPress={event => {
+                            if (event.code === "Enter" || event.key === "Enter") {
+                                this.addButton.current.click()
+                            }
+                        }}
+                    >
                         <div style={{ display: "flex", marginTop: "4px" }}>
                             <span style={{ marginRight: "11px" }}>Name:</span>{" "}
                             <span className="full-name">{this.state.fullName}</span>
@@ -171,13 +179,10 @@ class AddCoin extends React.Component {
                                 ref={this.amountInp}
                             />
                         </div>
-                        <div className="message" style={{ color: "red", textAlign: "center" }}>
-                            {" "}
-                        </div>
+                        <div className="message" style={{ color: "red", textAlign: "center" }} />
                         <div className="confirm-add-container">
-                            {" "}
                             <Link to={{ pathname: "/" }} className="link-no-decor">
-                                <div className="confirm-add btn" onClick={this.handleAddItem}>
+                                <div className="confirm-add btn" onClick={this.handleAddItem} ref={this.addButton}>
                                     ADD
                                 </div>
                             </Link>

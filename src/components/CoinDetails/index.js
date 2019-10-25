@@ -99,6 +99,7 @@ function MarketData({ prices, values }) {
 }
 
 function AlertContainer({ alerts, toggleModal, allPrices }) {
+    let [error, setError] = useState(false)
     return (
         <div className="coin-details-alerts-container">
             <div className="coin-details-alerts">
@@ -119,23 +120,26 @@ function AlertContainer({ alerts, toggleModal, allPrices }) {
                     </div>
                     <div> </div>
                 </div>
-                <div className="errormsg" style={{ color: "red", justifySelf: "center" }} />
+                <div className="errormsg" style={{ color: "red", justifySelf: "center" }}>
+                    {error}
+                </div>
                 <div
                     className="add-alert btn"
                     style={{ justifySelf: "center", width: "80px" }}
                     onClick={() => {
                         if (!("Notification" in window)) {
-                            // todo display error this.errorMsg.textContent = "Notifications are not supported in your browser"
+                            setError("Notifications are not supported in your browser")
                             return
                         }
                         if (Notification.permission !== "granted") {
                             Notification.requestPermission()
-                            // todo display error  this.errorMsg.textContent = "Please enable notifications"
+                            setError("Please enable notifications")
+
                             return
                         }
 
                         if (Object.keys(allPrices).length === 0) {
-                            console.log("no market data for this coin")
+                            setError("no market data for this coin")
                             return
                         }
 

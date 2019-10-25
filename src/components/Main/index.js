@@ -9,56 +9,60 @@ import ChangePeriodButtons from "./ChangePeriodButtons"
 import { ErrorBoundary } from "../ErrorBoundary"
 import { getFullItem } from "../../redux/selectors"
 
-function Main({ portfolio }) {
+function Main({ portfolio, settings }) {
+    let sortedPortfolio = sortPortfolio([...portfolio], settings)
+
     return (
         <div id="main">
             <ErrorBoundary>
                 <TotalValue portfolio={portfolio} />
             </ErrorBoundary>
             <PortfolioLegend />
-            <Portfolio portfolio={portfolio} />
+            <Portfolio portfolio={sortedPortfolio} />
             <ChangePeriodButtons />
         </div>
     )
 }
 
-const mapStateToProps = function(state) {
-    let portfolio = Object.keys(state.portfolio).map(key => ({ ...state.portfolio[key] }))
-    const { settings } = state
-
-    portfolio = portfolio
-        .map(item => {
-            return getFullItem(state, item.id)
-        })
-
-        .sort((item1, item2) => {
-            switch (settings.portfolioSortedBy) {
-                case "alphaAsc": {
-                    return item1.symbol.localeCompare(item2.symbol)
-                }
-
-                case "alphaDsc": {
-                    return item2.symbol.localeCompare(item1.symbol)
-                }
-                case "marketcapAsc": {
-                    return item1.market_cap_rank - item2.market_cap_rank
-                }
-                case "marketcapDsc": {
-                    return item2.market_cap_rank - item1.market_cap_rank
-                }
-                case "netvalAsc": {
-                    return item1.values[0].value - item2.values[0].value
-                }
-                case "netvalDsc": {
-                    return item2.values[0].value - item1.values[0].value
-                }
-
-                default:
-                    return 1
+function sortPortfolio(portfolio, settings) {
+    return portfolio.sort((item1, item2) => {
+        switch (settings.portfolioSortedBy) {
+            case "alphaAsc": {
+                return item1.symbol.localeCompare(item2.symbol)
             }
+
+            case "alphaDsc": {
+                return item2.symbol.localeCompare(item1.symbol)
+            }
+            case "marketcapAsc": {
+                return item1.market_cap_rank - item2.market_cap_rank
+            }
+            case "marketcapDsc": {
+                return item2.market_cap_rank - item1.market_cap_rank
+            }
+            case "netvalAsc": {
+                return item1.values[0].value - item2.values[0].value
+            }
+            case "netvalDsc": {
+                return item2.values[0].value - item1.values[0].value
+            }
+
+            default:
+                return 1
+        }
+    })
+}
+
+const mapStateToProps = function(state) {
+    let { settings, portfolio } = state
+
+    portfolio = Object.keys(portfolio)
+        .map(key => portfolio[key].id)
+        .map(id => {
+            return getFullItem(state, id)
         })
 
-    return { portfolio }
+    return { portfolio, settings }
 }
 
 export default connect(mapStateToProps)(Main)

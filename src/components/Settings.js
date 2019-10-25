@@ -15,6 +15,8 @@ function VersusCurrency({ name, remover }) {
     )
 }
 
+//todo disallow removing all currencies, leave at least one
+
 class VersusCurrencyManager extends React.Component {
     constructor(props) {
         super(props)
