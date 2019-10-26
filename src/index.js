@@ -26,6 +26,8 @@ const store = createStore(rootReducer, hydrate(), enhancer)
 window.store = store
 register()
 
+//todo  tip when portfolio is empty, charts
+
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
