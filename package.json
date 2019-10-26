@@ -12,8 +12,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node ./src/server/app.js",
-        "build": "webpack --config  webpack.prod.js",
-        "watch": "webpack --config  webpack.prod.js --watch"
+        "build": "webpack --config webpack.config.js --env production",
+        "watch": "webpack --config webpack.config.js --env development --watch"
     },
     "devDependencies": {
         "@babel/core": "^7.5.5",
@@ -34,7 +34,8 @@
         "regenerator-runtime": "^0.13.3",
         "style-loader": "^1.0.0",
         "webpack": "^4.39.2",
-        "webpack-cli": "^3.3.7"
+        "webpack-cli": "^3.3.7",
+        "workbox-webpack-plugin": "^4.3.1"
     },
     "author": "Tiramisu77",
     "license": "MIT"

@@ -28,8 +28,15 @@
     position: absolute;
     z-index: 10;
     padding: 4px;
+    flex-direction: column;
 }
 
 .remove-versus-curr {
     cursor: pointer;
+}
+
+#versus-currencies {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

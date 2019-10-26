@@ -1,3 +1,5 @@
+import { memo } from "../lib.js"
+
 function safeNum(num) {
     if (typeof num === "number" && !isNaN(num)) return num
     else return 0
@@ -64,4 +66,46 @@ export const getFullItem = function(store, id) {
     const values = getValues(item, marketData)
 
     return { ...item, ...apiData, ...marketData, ...values }
+}
+
+export const getFullPortfolio = function(store) {
+    let { portfolio } = store
+
+    portfolio = Object.keys(portfolio)
+        .map(key => portfolio[key].id)
+        .map(id => {
+            return getFullItem(store, id)
+        })
+
+    return portfolio
+}
+
+const _portfolioStructure = memo(function(portfolio, apiData) {
+    portfolio = Object.keys(portfolio)
+        .map(key => portfolio[key])
+        .map(({ id, amount }) => {
+            return {
+                id,
+                value: safeNum(amount * apiData[id].market_data.current_price.usd),
+            }
+        })
+
+    let total = portfolio.reduce((acc, e) => {
+        acc += e.value
+        return acc
+    }, 0)
+
+    let res = {}
+
+    for (let item of portfolio) {
+        let { id, value } = item
+        res[id] = (value / total) * 100
+    }
+
+    return res
+})
+
+export const getPortfolioStructure = function(store) {
+    let { portfolio, apiData } = store
+    return _portfolioStructure(portfolio, apiData)
 }

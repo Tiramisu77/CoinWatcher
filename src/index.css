@@ -71,7 +71,7 @@ body {
 }
 
 .btn {
-    padding: 3px 6px 3px 6px;
+    padding: 3px 10px 3px 10px;
     margin: 8px 4px 2px 4px;
     background: linear-gradient(cyan, #9fa2c3);
     color: black;
@@ -220,6 +220,10 @@ input[type="number"]::-webkit-outer-spin-button {
     color: inherit;
 }
 
+.right {
+    text-align: right;
+}
+
 .inp:focus {
     outline: none;
 }
@@ -231,4 +235,17 @@ input[type="number"]::-webkit-outer-spin-button {
 .link-no-decor {
     color: inherit;
     text-decoration: none;
+}
+
+#about {
+    margin: 8px;
+    padding: 6px;
+    word-break: break-word;
+    overflow: auto;
+    background-color: var(---secondary-color);
+}
+
+#about a {
+    text-decoration: none;
+    color: #00b6ff;
 }

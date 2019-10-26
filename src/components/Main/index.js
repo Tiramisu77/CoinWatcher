@@ -7,7 +7,7 @@ import PortfolioLegend from "./PortfolioLegend"
 import Portfolio from "./Portfolio"
 import ChangePeriodButtons from "./ChangePeriodButtons"
 import { ErrorBoundary } from "../ErrorBoundary"
-import { getFullItem } from "../../redux/selectors"
+import { getFullPortfolio } from "@app/redux/selectors"
 
 function Main({ portfolio, settings }) {
     let sortedPortfolio = sortPortfolio([...portfolio], settings)
@@ -56,11 +56,7 @@ function sortPortfolio(portfolio, settings) {
 const mapStateToProps = function(state) {
     let { settings, portfolio } = state
 
-    portfolio = Object.keys(portfolio)
-        .map(key => portfolio[key].id)
-        .map(id => {
-            return getFullItem(state, id)
-        })
+    portfolio = getFullPortfolio(state)
 
     return { portfolio, settings }
 }

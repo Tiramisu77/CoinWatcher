@@ -12,7 +12,7 @@ export const PercAlert = connect(
         <div className="perc-alert">
             <div>Change:</div>
             <input
-                className="inp"
+                className="inp right"
                 autoComplete="off"
                 type="number"
                 name="percentage"

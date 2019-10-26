@@ -144,3 +144,29 @@ export const debounce = function(func, limit) {
         timeoudId = setTimeout(() => func.call(this, ...args), limit)
     }
 }
+
+const cache = new WeakMap([])
+
+function compareArgs(func, newArgs) {
+    let { args, result } = cache.get(func)
+    return args.length === newArgs.length && args.every((value, index) => value === newArgs[index])
+        ? result
+        : "__not found in cache__"
+}
+
+export const memo = function(func) {
+    let memoizedFunc = function(...args) {
+        let fromCache = compareArgs(memoizedFunc, args)
+        if (fromCache !== "__not found in cache__") {
+            return fromCache
+        } else {
+            let result = func.call(this, ...args)
+            cache.set(memoizedFunc, { args, result })
+            return result
+        }
+    }
+
+    cache.set(memoizedFunc, { args: [], result: null })
+
+    return memoizedFunc
+}

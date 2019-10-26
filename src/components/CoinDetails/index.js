@@ -4,8 +4,8 @@ import { Link } from "react-router-dom"
 import "./CoinDetails.css"
 import { removeItem, changeAmount } from "../../redux/actions/portfolio"
 import { connect } from "react-redux"
-import { getFullItem } from "../../redux/selectors"
-import { numToFormattedString } from "../../lib"
+import { getFullItem, getPortfolioStructure } from "@app/redux/selectors"
+import { numToFormattedString } from "@app/lib"
 import { Trashcan, Bell } from "./assets"
 import { NewAlertModal } from "./NewAlertModal"
 import { PriceAlert } from "./PriceAlert"
@@ -32,7 +32,7 @@ function TopIcons({ image, id, removeItem }) {
     )
 }
 
-function DetailsData({ name, symbol, id, changeAmount, amount }) {
+function DetailsData({ name, symbol, id, changeAmount, amount, share }) {
     return (
         <div id="details-data">
             <div>Coin:</div>
@@ -52,7 +52,15 @@ function DetailsData({ name, symbol, id, changeAmount, amount }) {
                     changeAmount({ id, amount: ev.target.value })
                 }}
             />
-            <div className="k">Portfolio share:</div> <div className="details-shareM v"> </div>
+            <div className="k">Portfolio share:</div>{" "}
+            <div className="details-shareM v">
+                {
+                    numToFormattedString(share, {
+                        type: "percentage",
+                        isChange: false,
+                    }).str
+                }
+            </div>
         </div>
     )
 }
@@ -153,10 +161,11 @@ function AlertContainer({ alerts, toggleModal, allPrices }) {
     )
 }
 
-function CoinDetails({ removeItem, changeAmount, location, fullItem, alerts, allPrices }) {
+function CoinDetails({ removeItem, changeAmount, location, fullItem, alerts, allPrices, portfolioStructure }) {
     const { id } = location.state
     const { name, image, symbol, amount, prices, values } = fullItem
     const [showModal, toggleModal] = useState(false)
+    const share = portfolioStructure[id] || 0
 
     return (
         <div className="page-container">
@@ -177,7 +186,14 @@ function CoinDetails({ removeItem, changeAmount, location, fullItem, alerts, all
                 <div className="details-data-container">
                     <div>
                         <TopIcons image={image} id={id} removeItem={removeItem} />
-                        <DetailsData name={name} symbol={symbol} id={id} changeAmount={changeAmount} amount={amount} />
+                        <DetailsData
+                            name={name}
+                            symbol={symbol}
+                            id={id}
+                            changeAmount={changeAmount}
+                            amount={amount}
+                            share={share}
+                        />
                     </div>
 
                     <MarketData prices={prices} values={values} />
@@ -200,7 +216,7 @@ export default connect(
             priceAlerts: priceAlerts.filter(({ currencyId }) => currencyId === id),
         }
         let allPrices = store.apiData[id] ? store.apiData[id].market_data.current_price : {}
-        return { fullItem: getFullItem(store, id), alerts, allPrices }
+        return { fullItem: getFullItem(store, id), alerts, allPrices, portfolioStructure: getPortfolioStructure(store) }
     },
     { removeItem, changeAmount }
 )(CoinDetails)

@@ -56,7 +56,7 @@ class VersusCurrencyManager extends React.Component {
                 <div
                     className="custom-select"
                     data-val={"don't hide me"}
-                    style={{ display: this.state.showSelect ? "block" : "none" }}
+                    style={{ display: this.state.showSelect ? "flex" : "none" }}
                 >
                     {this.props.supportedVerCurr.map(curr => {
                         return (
@@ -73,6 +73,10 @@ class VersusCurrencyManager extends React.Component {
                             name={currency}
                             data-curr={currency}
                             remover={() => {
+                                if (this.props.currentCurrencies.length === 1) {
+                                    return
+                                }
+
                                 this.props.removeVersusCurrency(currency)
                             }}
                         />
