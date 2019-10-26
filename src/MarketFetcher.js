@@ -55,6 +55,13 @@ function _MarketFetcher({ portfolio, settings, setSupportedVerCurr, setSupported
     useEffect(() => {
         loadAndSetSupportedCoins(setSupportedCoins)
         loadAndSetSupportedVerCurr(setSupportedVerCurr)
+
+        function onFocus() {
+            priceUpdateLoop(portfolio, setItemApiData, settings.updateInterval)
+        }
+        window.addEventListener("focus", onFocus)
+
+        return () => window.removeEventListener("focus", onFocus)
     }, [])
 
     useEffect(

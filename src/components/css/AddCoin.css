@@ -46,8 +46,8 @@
 .confirm-add {
     padding: 3px 6px 3px 6px;
     margin: 8px 4px 2px 4px;
-    background: linear-gradient(cyan, #9fa2c3);
-    color: black;
+    background: inherit;
+    color: inherit;
     text-align: center;
     width: 60px;
     border-radius: 2.5px;

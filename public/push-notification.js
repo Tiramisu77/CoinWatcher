@@ -1,3 +1,7 @@
+self.addEventListener("install", function() {
+    self.skipWaiting()
+})
+
 self.addEventListener("notificationclick", function(event) {
     event.notification.close()
 
