@@ -29,13 +29,23 @@
     z-index: 10;
     padding: 4px;
     flex-direction: column;
+    cursor: default;
+}
+
+.custom-select-item {
+    padding: 2px 8px 2px 8px;
+}
+
+.custom-select-item:hover {
+    background-color: blue;
+    color: white;
 }
 
 .remove-versus-curr {
     cursor: pointer;
 }
 
-#versus-currencies {
+. #versus-currencies {
     display: flex;
     flex-direction: column;
     align-items: center;

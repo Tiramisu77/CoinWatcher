@@ -60,7 +60,7 @@ class VersusCurrencyManager extends React.Component {
                 >
                     {this.props.supportedVerCurr.map(curr => {
                         return (
-                            <div key={curr} data-val={curr} onClick={this.onSelect}>
+                            <div key={curr} data-val={curr} onClick={this.onSelect} className="custom-select-item">
                                 {curr}
                             </div>
                         )
