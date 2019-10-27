@@ -1,7 +1,8 @@
 import React from "react"
 import { Link } from "react-router-dom"
+import { connect } from "react-redux"
 
-export default function FooterButtons() {
+function FooterButtons({ portfolio }) {
     return (
         <div id="footer-buttons">
             <div style={{ justifyContent: "flex-start" }}>
@@ -28,7 +29,7 @@ export default function FooterButtons() {
             <div style={{ justifyContent: "center" }}>
                 <Link to="/AddCoin">
                     <svg
-                        className="footer-button"
+                        className={Object.keys(portfolio).length > 0 ? "footer-button" : "footer-button glow-btn"}
                         id="add-coin"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 292.4 292.4"
@@ -37,6 +38,7 @@ export default function FooterButtons() {
                             className="svgbody"
                             d="M146.2 0C65.6 0 0 65.6 0 146.2s65.6 146.2 146.2 146.2 146.2-65.6 146.2-146.2S226.8 0 146.2 0zM195 152.2h-42.8v42.8c0 3.3-2.7 6-6 6 -3.3 0-6-2.7-6-6v-42.8H97.4c-3.3 0-6-2.7-6-6s2.7-6 6-6h42.8V97.4c0-3.3 2.7-6 6-6 3.3 0 6 2.7 6 6v42.8h42.8c3.3 0 6 2.7 6 6S198.3 152.2 195 152.2z"
                             fill="#010002"
+                            shapeRendering="geometricPrecision"
                         />
                     </svg>
                 </Link>
@@ -61,3 +63,9 @@ export default function FooterButtons() {
         </div>
     )
 }
+
+export default connect(store => {
+    return {
+        portfolio: store.portfolio,
+    }
+})(FooterButtons)

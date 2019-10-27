@@ -10,11 +10,11 @@ export class App extends React.Component {
     constructor(props) {
         super(props)
     }
-    //basename="/CoinWatcher"
+
     render() {
         return (
             <div id="app">
-                <Router>
+                <Router basename="/CoinWatcher">
                     <AlertSystem />
                     <MarketFetcher />
                     <Head />

@@ -187,6 +187,20 @@ body {
     transition: 0.4s;
     cursor: pointer;
 }
+
+.glow-btn {
+    animation: glow 1s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 10px -10px #7de4a4;
+    }
+    to {
+        box-shadow: 0 0 10px 10px #7de4a4;
+    }
+}
+
 .svgbody {
     fill: var(--main-font-color);
 }
@@ -196,6 +210,7 @@ body {
 
 #add-coin {
     height: 3em;
+    border-radius: 100px;
 }
 
 .clickable {
