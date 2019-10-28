@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { connect } from "react-redux"
 import { removeAlert, changeAlert } from "./redux/actions/alerts"
-import { numToFormattedString, timeStrToMS } from "./lib"
+import { numToFormattedString, timeStrToMS, memo } from "./lib"
 
 function checkPriceAlert(priceAlert, apiData) {
     let { currencyId, price, priceOnCreation, verCurr } = priceAlert
@@ -53,15 +53,14 @@ function checkTimePermission(lastTimeFired, period) {
 }
 
 function checkPercAlert(percAlert, apiData) {
-    let { currencyId, percChange, period, verCurr, lastTimeFired } = percAlert
-    if (!apiData[currencyId]) {
+    let { percChange, period, verCurr, lastTimeFired } = percAlert
+    if (!apiData) {
         return
     }
-    let recentPriceChange =
-        apiData[currencyId].market_data[`price_change_percentage_${period}_in_currency`][verCurr.toLowerCase()]
+    let recentPriceChange = apiData.market_data[`price_change_percentage_${period}_in_currency`][verCurr.toLowerCase()]
 
     if (Math.abs(recentPriceChange) > percChange && checkTimePermission(lastTimeFired, period)) {
-        let currentPrice = apiData[currencyId].market_data.current_price[verCurr.toLowerCase()]
+        let currentPrice = apiData.market_data.current_price[verCurr.toLowerCase()]
         return {
             percAlert,
             recentPriceChange,
@@ -129,6 +128,32 @@ function separatePercAlerts(percAlertsMap) {
     return res
 }
 
+const processPercAlertsForItem = memo(function processPercAlertsForItem(separatedAlerts, apiDataForItem, changeAlert) {
+    for (let period in separatedAlerts) {
+        //sort percentage alerts to only render the alert with the highest percChange value
+        let sortedAlerts = separatedAlerts[period].sort(
+            (alert1, alert2) => Math.abs(alert2.percChange) - Math.abs(alert1.percChange)
+        )
+
+        /*
+    only render the first alert that checks out, but mark the rest alerts as handled
+    to prevent annoying multifires due to a sudden
+    */
+        let alertWasShown = false
+        for (let alert of sortedAlerts) {
+            let result = checkPercAlert(alert, apiDataForItem)
+            if (result) {
+                let { percAlert, recentPriceChange, currentPrice } = result
+                if (!alertWasShown) {
+                    renderPercAlert(percAlert, recentPriceChange, currentPrice)
+                    alertWasShown = true
+                }
+                afterPercAlert(percAlert, changeAlert)
+            }
+        }
+    }
+})
+
 function processPercAlerts(percAlerts, apiData, changeAlert) {
     let percAlertsMap = percAlerts.reduce((acc, alert) => {
         if (acc[alert.currencyId]) {
@@ -140,35 +165,15 @@ function processPercAlerts(percAlerts, apiData, changeAlert) {
     }, {})
 
     let separated = separatePercAlerts(percAlertsMap)
-    //bugfix - separate alerts by their period, currently it ignores it
 
     for (let key in separated) {
-        for (let period in separated[key]) {
-            //sort percentage alerts to only render the alert with the highest percChange value
-            let sortedAlerts = separated[key][period].sort(
-                (alert1, alert2) => Math.abs(alert2.percChange) - Math.abs(alert1.percChange)
-            )
-
-            /*
-          only render the first alert that checks out, but mark the rest alerts as handled
-          to prevent annoying multifires due to a sudden
-          */
-            let alertWasShown = false
-            for (let alert of sortedAlerts) {
-                let result = checkPercAlert(alert, apiData)
-                if (result) {
-                    let { percAlert, recentPriceChange, currentPrice } = result
-                    if (!alertWasShown) {
-                        renderPercAlert(percAlert, recentPriceChange, currentPrice)
-                        alertWasShown = true
-                    }
-                    afterPercAlert(percAlert, changeAlert)
-                }
-            }
-        }
+        let separatedAlerts = separated[key]
+        let apiDataForItem = apiData[key]
+        processPercAlertsForItem(separatedAlerts, apiDataForItem, changeAlert)
     }
 }
 
+//todo fix bug with stale alerts - do diffing for each alert
 function _AlertSystem({ alerts, apiData, changeAlert, removeAlert }) {
     let { priceAlerts, percAlerts } = alerts
 
