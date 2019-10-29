@@ -58,15 +58,25 @@ body {
     overflow: auto;
 }
 
-.page-container {
+.page-container,
+.details-container {
     display: grid;
 
     align-content: center;
 }
 
 @media (min-height: 600px) {
+    .details-container {
+        margin-top: 20%;
+    }
     .page-container {
         height: 100%;
+    }
+}
+
+@media (min-height: 1000px) {
+    .details-container {
+        margin-top: 35%;
     }
 }
 

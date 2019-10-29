@@ -41,3 +41,12 @@ export const loadVersusCurrencies = async function() {
         else return Promise.reject(response.status)
     })
 }
+
+export const loadHistoricalPrices = async function(id, verCurr, period, signal) {
+    return fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=${verCurr}&days=${period}`, {
+        signal,
+    }).then(response => {
+        if (response.ok) return response.json()
+        else return Promise.reject(response.status)
+    })
+}

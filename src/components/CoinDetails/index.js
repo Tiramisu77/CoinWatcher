@@ -10,6 +10,7 @@ import { Trashcan, Bell } from "./assets"
 import { NewAlertModal } from "./NewAlertModal"
 import { PriceAlert } from "./PriceAlert"
 import { PercAlert } from "./PercAlert"
+import { CoinChart } from "./CoinChart"
 
 function TopIcons({ image, id, removeItem }) {
     return (
@@ -161,14 +162,27 @@ function AlertContainer({ alerts, toggleModal, allPrices }) {
     )
 }
 
-function CoinDetails({ removeItem, changeAmount, location, fullItem, alerts, allPrices, portfolioStructure }) {
+function CoinDetails({
+    removeItem,
+    changeAmount,
+    location,
+    fullItem,
+    alerts,
+    allPrices,
+    portfolioStructure,
+    period,
+    mainCurrency,
+}) {
+    const [showModal, toggleModal] = useState(false)
+    const [currentTab, changeTab] = useState("summary")
+
     const { id } = location.state
     const { name, image, symbol, amount, prices, values } = fullItem
-    const [showModal, toggleModal] = useState(false)
+
     const share = portfolioStructure[id] || 0
 
     return (
-        <div className="page-container">
+        <div className="details-container">
             {showModal && (
                 <div className="modal-container">
                     <NewAlertModal
@@ -184,21 +198,60 @@ function CoinDetails({ removeItem, changeAmount, location, fullItem, alerts, all
 
             <div id="coin-details">
                 <div className="details-data-container">
-                    <div>
-                        <TopIcons image={image} id={id} removeItem={removeItem} />
-                        <DetailsData
-                            name={name}
-                            symbol={symbol}
-                            id={id}
-                            changeAmount={changeAmount}
-                            amount={amount}
-                            share={share}
-                        />
+                    <TopIcons image={image} id={id} removeItem={removeItem} />
+
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        <div
+                            className={
+                                currentTab === "alerts" ? "change-period-btn period-btn-pressed" : "change-period-btn"
+                            }
+                            onClick={() => {
+                                changeTab("alerts")
+                            }}
+                        >
+                            Alerts
+                        </div>
+                        <div
+                            className={
+                                currentTab === "summary" ? "change-period-btn period-btn-pressed" : "change-period-btn"
+                            }
+                            onClick={() => {
+                                changeTab("summary")
+                            }}
+                        >
+                            Summary
+                        </div>
+                        <div
+                            className={
+                                currentTab === "chart" ? "change-period-btn period-btn-pressed" : "change-period-btn"
+                            }
+                            onClick={() => {
+                                changeTab("chart")
+                            }}
+                        >
+                            Chart
+                        </div>
                     </div>
 
-                    <MarketData prices={prices} values={values} />
+                    {currentTab === "summary" && (
+                        <>
+                            <DetailsData
+                                name={name}
+                                symbol={symbol}
+                                id={id}
+                                changeAmount={changeAmount}
+                                amount={amount}
+                                share={share}
+                            />
+                            <MarketData prices={prices} values={values} />
+                        </>
+                    )}
 
-                    <AlertContainer alerts={alerts} toggleModal={toggleModal} allPrices={allPrices} />
+                    {currentTab === "alerts" && (
+                        <AlertContainer alerts={alerts} toggleModal={toggleModal} allPrices={allPrices} />
+                    )}
+
+                    {currentTab === "chart" && <CoinChart id={id} period={period} mainCurrency={mainCurrency} />}
                 </div>
 
                 <div className="message" style={{ color: "red", textAlign: "center" }} />
@@ -216,7 +269,16 @@ export default connect(
             priceAlerts: priceAlerts.filter(({ currencyId }) => currencyId === id),
         }
         let allPrices = store.apiData[id] ? store.apiData[id].market_data.current_price : {}
-        return { fullItem: getFullItem(store, id), alerts, allPrices, portfolioStructure: getPortfolioStructure(store) }
+        let period = store.settings.priceChangePeriod
+        let mainCurrency = store.settings.currentCurrencies[0]
+        return {
+            fullItem: getFullItem(store, id),
+            alerts,
+            allPrices,
+            portfolioStructure: getPortfolioStructure(store),
+            period,
+            mainCurrency,
+        }
     },
     { removeItem, changeAmount }
 )(CoinDetails)

@@ -6,6 +6,8 @@ import FooterButtons from "./components/FooterButtons"
 import { AlertSystem } from "./AlertSystem"
 import { MarketFetcher } from "./MarketFetcher"
 
+const basename = process.env.NODE_ENV === "production" ? "/CoinWatcher" : ""
+
 export class App extends React.Component {
     constructor(props) {
         super(props)
@@ -14,7 +16,7 @@ export class App extends React.Component {
     render() {
         return (
             <div id="app">
-                <Router basename="/CoinWatcher">
+                <Router basename={basename}>
                     <AlertSystem />
                     <MarketFetcher />
                     <Head />

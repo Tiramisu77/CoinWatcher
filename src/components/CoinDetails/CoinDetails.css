@@ -125,3 +125,10 @@
 .details-shareM {
     align-self: center;
 }
+
+.chart-container {
+    position: relative;
+    height: 40vh;
+    width: 80vw;
+    max-width: 600px;
+}

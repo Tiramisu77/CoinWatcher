@@ -86,7 +86,7 @@ const _portfolioStructure = memo(function(portfolio, apiData) {
         .map(({ id, amount }) => {
             return {
                 id,
-                value: safeNum(amount * apiData[id].market_data.current_price.usd),
+                value: safeNum(amount * apiData[id] ? apiData[id].market_data.current_price.usd : 0),
             }
         })
 
