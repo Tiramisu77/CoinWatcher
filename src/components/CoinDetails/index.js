@@ -251,7 +251,9 @@ function CoinDetails({
                         <AlertContainer alerts={alerts} toggleModal={toggleModal} allPrices={allPrices} />
                     )}
 
-                    {currentTab === "chart" && <CoinChart id={id} period={period} mainCurrency={mainCurrency} />}
+                    {currentTab === "chart" && (
+                        <CoinChart id={id} period={period} mainCurrency={mainCurrency} amount={amount} />
+                    )}
                 </div>
 
                 <div className="message" style={{ color: "red", textAlign: "center" }} />

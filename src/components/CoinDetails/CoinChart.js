@@ -23,8 +23,8 @@ class ChartView extends React.Component {
             data: {
                 datasets: [
                     {
-                        label: this.props.label,
-                        data: this.props.data,
+                        label: `price ${this.props.label}`,
+                        data: this.props.data.prices,
                         backgroundColor: [
                             "rgba(255, 99, 132, 0.2)",
                             "rgba(54, 162, 235, 0.2)",
@@ -35,6 +35,27 @@ class ChartView extends React.Component {
                         ],
                         borderColor: [
                             "rgba(255,99,132,1)",
+                            "rgba(54, 162, 235, 1)",
+                            "rgba(255, 206, 86, 1)",
+                            "rgba(75, 192, 192, 1)",
+                            "rgba(153, 102, 255, 1)",
+                            "rgba(255, 159, 64, 1)",
+                        ],
+                        borderWidth: 1,
+                    },
+                    {
+                        label: `value ${this.props.label}`,
+                        data: this.props.data.amounts,
+                        backgroundColor: [
+                            "rgba(72, 47, 156, 0.2)",
+                            "rgba(54, 162, 235, 0.2)",
+                            "rgba(255, 206, 86, 0.2)",
+                            "rgba(75, 192, 192, 0.2)",
+                            "rgba(153, 102, 255, 0.2)",
+                            "rgba(255, 159, 64, 0.2)",
+                        ],
+                        borderColor: [
+                            "rgba(72, 47, 156, 1)",
                             "rgba(54, 162, 235, 1)",
                             "rgba(255, 206, 86, 1)",
                             "rgba(75, 192, 192, 1)",
@@ -93,7 +114,7 @@ function getUnit(periodStr) {
     if (/h/.test(periodStr)) return "hour"
 }
 
-export function CoinChart({ id, mainCurrency, period }) {
+export function CoinChart({ id, mainCurrency, period, amount }) {
     const [data, setData] = useState(null)
 
     useEffect(() => {
@@ -106,7 +127,10 @@ export function CoinChart({ id, mainCurrency, period }) {
                     let [x, y] = arr
                     return { x: new Date(x), y }
                 })
-                setData(prices)
+                let amounts = prices.map(({ x, y }) => {
+                    return { x, y: y * amount }
+                })
+                setData({ prices, amounts })
             })
             .catch(e => {
                 if (e.message === "The user aborted a request.") {
@@ -122,8 +146,7 @@ export function CoinChart({ id, mainCurrency, period }) {
     }, [])
     return (
         <>
-            {data !== null &&
-                data !== "error" && <ChartView data={data} unit={getUnit(period)} label={`price ${mainCurrency}`} />}
+            {data !== null && data !== "error" && <ChartView data={data} unit={getUnit(period)} label={mainCurrency} />}
             {data === "error" && <div>Unable to get chart for this coin</div>}
         </>
     )
