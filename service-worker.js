@@ -16,7 +16,7 @@ workbox.setConfig({modulePathPrefix: "workbox-v4.3.1"});
 
 importScripts(
   "./push-notification.js",
-  "precache-manifest.6f5798c13167c8adfaeb4c6de0e343d1.js"
+  "precache-manifest.2d622051f8b07d674008576c35f7d826.js"
 );
 
 workbox.core.skipWaiting();
