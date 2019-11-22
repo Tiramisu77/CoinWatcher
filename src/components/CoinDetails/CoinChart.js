@@ -15,7 +15,9 @@ class ChartView extends React.Component {
 
         window.addEventListener("beforeprint", beforePrintHandler)
     }
-    componentDidMount() {
+
+    renderChart() {
+        console.log(this.props)
         const node = this.node
 
         new Chart(node, {
@@ -63,6 +65,7 @@ class ChartView extends React.Component {
                             "rgba(255, 159, 64, 1)",
                         ],
                         borderWidth: 1,
+                        hidden: true,
                     },
                 ],
             },
@@ -91,6 +94,15 @@ class ChartView extends React.Component {
             },
         })
     }
+
+    componentDidMount() {
+        this.renderChart()
+    }
+
+    componentDidUpdate() {
+        this.renderChart()
+    }
+
     componentWillUnmount() {
         window.removeEventListener("beforeprint", beforePrintHandler)
     }

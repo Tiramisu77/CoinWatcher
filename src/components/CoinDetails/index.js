@@ -11,7 +11,7 @@ import { NewAlertModal } from "./NewAlertModal"
 import { PriceAlert } from "./PriceAlert"
 import { PercAlert } from "./PercAlert"
 import { CoinChart } from "./CoinChart"
-
+import ChangePeriodButtons from "../Main/ChangePeriodButtons"
 function TopIcons({ image, id, removeItem }) {
     return (
         <div className="top-icons">
@@ -182,6 +182,7 @@ function CoinDetails({
     const share = portfolioStructure[id] || 0
 
     return (
+      <div id="coindetails-container">
         <div className="details-container">
             {showModal && (
                 <div className="modal-container">
@@ -259,6 +260,10 @@ function CoinDetails({
                 <div className="message" style={{ color: "red", textAlign: "center" }} />
             </div>
         </div>
+
+        <ChangePeriodButtons/>
+        </div>
+
     )
 }
 
