@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
+import { connect } from "react-redux"
 import { loadHistoricalPrices } from "@app/network"
-
+import { increment, decrement } from "@app/redux/actions/activeRequests"
 const Chart = require("chart.js")
 
 function beforePrintHandler() {
@@ -11,10 +12,14 @@ function beforePrintHandler() {
 
 function ChartView({ data, unit, label }) {
     const canvas = useRef(null)
+    const [chart, setChart] = useState(null)
     useEffect(
         () => {
             window.addEventListener("beforeprint", beforePrintHandler)
-            new Chart(canvas.current, {
+            if (chart) {
+                chart.destroy()
+            }
+            const newChart = new Chart(canvas.current, {
                 type: "line",
                 data: {
                     datasets: [
@@ -87,7 +92,7 @@ function ChartView({ data, unit, label }) {
                     },
                 },
             })
-
+            setChart(newChart)
             return () => window.removeEventListener("beforeprint", beforePrintHandler)
         },
         [data]
@@ -99,9 +104,12 @@ function ChartView({ data, unit, label }) {
     )
 }
 
-function getChartData({ id, mainCurrency, period, signal }) {
+async function getChartData({ id, mainCurrency, period, signal, increment, decrement }) {
     period = /h/.test(period) ? 1 : parseInt(period)
-    return loadHistoricalPrices(id, mainCurrency.toLowerCase(), period, signal)
+    increment()
+    let data = await loadHistoricalPrices(id, mainCurrency.toLowerCase(), period, signal)
+    decrement()
+    return data
 }
 
 function getUnit(periodStr) {
@@ -110,7 +118,7 @@ function getUnit(periodStr) {
     if (/h/.test(periodStr)) return "hour"
 }
 
-export function CoinChart({ id, mainCurrency, period, amount }) {
+function _CoinChart({ id, mainCurrency, period, amount, increment, decrement }) {
     const [data, setData] = useState(null)
 
     useEffect(
@@ -118,7 +126,7 @@ export function CoinChart({ id, mainCurrency, period, amount }) {
             let controller = new AbortController()
             let signal = controller.signal
 
-            getChartData({ id, mainCurrency, period, signal })
+            getChartData({ id, mainCurrency, period, signal, increment, decrement })
                 .then(({ prices }) => {
                     prices = prices.map(arr => {
                         let [x, y] = arr
@@ -150,3 +158,8 @@ export function CoinChart({ id, mainCurrency, period, amount }) {
         </>
     )
 }
+
+export const CoinChart = connect(
+    null,
+    { increment, decrement }
+)(_CoinChart)
