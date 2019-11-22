@@ -80,20 +80,23 @@ export const getFullPortfolio = function(store) {
     return portfolio
 }
 
-const _portfolioStructure = memo(function(portfolio, apiData) {
+const _portfolioStructure = function(portfolio, apiData) {
     portfolio = Object.keys(portfolio)
         .map(key => portfolio[key])
         .map(({ id, amount }) => {
+            const priceUSD = apiData[id] ? apiData[id].market_data.current_price.usd : 0
+
             return {
                 id,
-                value: safeNum(amount * apiData[id] ? apiData[id].market_data.current_price.usd : 0),
+                value: safeNum(amount * priceUSD),
             }
         })
 
-    let total = portfolio.reduce((acc, e) => {
-        acc += e.value
-        return acc
-    }, 0)
+    let total =
+        portfolio.reduce((acc, e) => {
+            acc += e.value
+            return acc
+        }, 0) || 1
 
     let res = {}
 
@@ -103,7 +106,7 @@ const _portfolioStructure = memo(function(portfolio, apiData) {
     }
 
     return res
-})
+}
 
 export const getPortfolioStructure = function(store) {
     let { portfolio, apiData } = store
