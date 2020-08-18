@@ -32,7 +32,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "images/red-delta.png"
   },
   {
-    "revision": "4b37e6759d3503a5e7a2",
+    "revision": "26998bcda3f3668452d0",
     "url": "index.js"
   },
   {
@@ -42,5 +42,9 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "2c347d939cca56a7c90f9b1cbc3070b9",
     "url": "push-notification.js"
+  },
+  {
+    "revision": "3f72719cf86047df21094f45330c2643",
+    "url": "sounds/notif.wav"
   }
 ]);
