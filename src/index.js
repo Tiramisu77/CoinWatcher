@@ -26,8 +26,6 @@ const store = createStore(rootReducer, hydrate(), enhancer)
 window.store = store
 register()
 
-//todo  charts
-
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
@@ -38,7 +36,7 @@ ReactDOM.render(
 )
 
 //create random portfolio
-window.randomPortfolio = function(num) {
+window.randomPortfolio = function (num) {
     let allId = [...store.getState().supportedCoins.idMap].map(e => e[1].id)
     let res = {}
     for (let i = 0; i < num; i++) {

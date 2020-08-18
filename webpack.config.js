@@ -14,6 +14,7 @@ let copyPlugin = new CopyPlugin([
     { from: "./public/images", to: "images" },
     { from: "./public/manifest.json", to: "" },
     { from: "./public/push-notification.js", to: "" },
+    { from: "./public/sounds", to: "sounds" }
 ])
 
 let workboxPlugin = new GenerateSW({
@@ -50,7 +51,7 @@ let workboxPlugin = new GenerateSW({
     ],
 })
 
-module.exports = function(env) {
+module.exports = function (env) {
     let plugins = env === "production" ? [htmlPlugin, copyPlugin, workboxPlugin] : [htmlPlugin, copyPlugin]
 
     return {

@@ -3,6 +3,11 @@ import { connect } from "react-redux"
 import { removeAlert, changeAlert } from "./redux/actions/alerts"
 import { numToFormattedString, timeStrToMS, memo } from "./lib"
 
+const audioPath = (process.env.NODE_ENV === "production" ? "/CoinWatcher" : "") + "/sounds/notif.wav"
+
+const NotifAudio = new Audio(audioPath)
+
+
 function checkPriceAlert(priceAlert, apiData) {
     let { currencyId, price, priceOnCreation, verCurr } = priceAlert
     if (!apiData[currencyId]) {
@@ -19,20 +24,22 @@ function checkPriceAlert(priceAlert, apiData) {
     return false
 }
 
-function renderPriceAlert({ priceAlert, currentPrice, targetIsHigher }) {
+function renderPriceAlert({ priceAlert, currentPrice, targetIsHigher, sound }) {
     let { verCurr, name } = priceAlert
     try {
-        navigator.serviceWorker.ready.then(function(registration) {
+        navigator.serviceWorker.ready.then(function (registration) {
             registration.showNotification(`Coin Watcher alert`, {
                 body: `${name} @ ${
                     numToFormattedString(currentPrice, {
                         type: "currency",
                         currency: verCurr,
                     }).str
-                }`,
+                    }`,
                 icon: targetIsHigher ? "/CoinWatcher/images/green-delta.png" : "/CoinWatcher/images/red-delta.png",
                 requireInteraction: true,
             })
+        }).then(() => {
+            if (sound) NotifAudio.play()
         })
     } catch (e) {
         console.error(e)
@@ -71,26 +78,28 @@ function checkPercAlert(percAlert, apiData) {
     return false
 }
 
-function renderPercAlert(percAlert, recentPriceChange, currentPrice) {
+function renderPercAlert(percAlert, recentPriceChange, currentPrice, sound) {
     let { period, verCurr, name } = percAlert
     try {
-        navigator.serviceWorker.ready.then(function(registration) {
+        navigator.serviceWorker.ready.then(function (registration) {
             registration.showNotification(`Coin Watcher alert`, {
                 body: `${name} ${period} change: ${
                     numToFormattedString(recentPriceChange, {
                         type: "percentage",
                         isChange: true,
                     }).str
-                } (${
+                    } (${
                     numToFormattedString(currentPrice, {
                         type: "currency",
                         currency: verCurr,
                     }).str
-                })`,
+                    })`,
                 icon:
                     recentPriceChange < 0 ? "/CoinWatcher/images/red-delta.png" : "/CoinWatcher/images/green-delta.png",
                 requireInteraction: true,
             })
+        }).then(() => {
+            if (sound) NotifAudio.play()
         })
     } catch (e) {
         console.error(e)
@@ -101,11 +110,11 @@ function afterPercAlert(percAlert, changeAlert) {
     changeAlert({ ...percAlert, lastTimeFired: Date.now() })
 }
 
-function processPriceAlerts(priceAlerts, apiData, removeAlert) {
+function processPriceAlerts(priceAlerts, apiData, removeAlert, sound) {
     priceAlerts.forEach(alert => {
         let check = checkPriceAlert(alert, apiData)
         if (check) {
-            renderPriceAlert(check)
+            renderPriceAlert(check, sound)
             afterPriceAlert(alert, removeAlert)
         }
     })
@@ -128,7 +137,7 @@ function separatePercAlerts(percAlertsMap) {
     return res
 }
 
-const processPercAlertsForItem = memo(function processPercAlertsForItem(separatedAlerts, apiDataForItem, changeAlert) {
+const processPercAlertsForItem = memo(function processPercAlertsForItem(separatedAlerts, apiDataForItem, changeAlert, sound) {
     for (let period in separatedAlerts) {
         //sort percentage alerts to only render the alert with the highest percChange value
         let sortedAlerts = separatedAlerts[period].sort(
@@ -145,7 +154,7 @@ const processPercAlertsForItem = memo(function processPercAlertsForItem(separate
             if (result) {
                 let { percAlert, recentPriceChange, currentPrice } = result
                 if (!alertWasShown) {
-                    renderPercAlert(percAlert, recentPriceChange, currentPrice)
+                    renderPercAlert(percAlert, recentPriceChange, currentPrice, sound)
                     alertWasShown = true
                 }
                 afterPercAlert(percAlert, changeAlert)
@@ -154,7 +163,7 @@ const processPercAlertsForItem = memo(function processPercAlertsForItem(separate
     }
 })
 
-function processPercAlerts(percAlerts, apiData, changeAlert) {
+function processPercAlerts(percAlerts, apiData, changeAlert, sound) {
     let percAlertsMap = percAlerts.reduce((acc, alert) => {
         if (acc[alert.currencyId]) {
             acc[alert.currencyId].push(alert)
@@ -169,19 +178,19 @@ function processPercAlerts(percAlerts, apiData, changeAlert) {
     for (let key in separated) {
         let separatedAlerts = separated[key]
         let apiDataForItem = apiData[key]
-        processPercAlertsForItem(separatedAlerts, apiDataForItem, changeAlert)
+        processPercAlertsForItem(separatedAlerts, apiDataForItem, changeAlert, sound)
     }
 }
 
 //todo fix bug with stale alerts - do diffing for each alert
-function _AlertSystem({ alerts, apiData, changeAlert, removeAlert }) {
+function _AlertSystem({ alerts, apiData, changeAlert, removeAlert, settings }) {
     let { priceAlerts, percAlerts } = alerts
-
+    let { sound } = settings
     //only run the system when apiData changes, to create grace period for newly created alerts
     useEffect(
         () => {
-            processPriceAlerts(priceAlerts, apiData, removeAlert)
-            processPercAlerts(percAlerts, apiData, changeAlert)
+            processPriceAlerts(priceAlerts, apiData, removeAlert, sound)
+            processPercAlerts(percAlerts, apiData, changeAlert, sound)
         },
         [apiData]
     )
@@ -191,8 +200,8 @@ function _AlertSystem({ alerts, apiData, changeAlert, removeAlert }) {
 
 export const AlertSystem = connect(
     store => {
-        let { alerts, apiData } = store
-        return { alerts, apiData }
+        let { alerts, apiData, settings } = store
+        return { alerts, apiData, settings }
     },
     { removeAlert, changeAlert }
 )(_AlertSystem)

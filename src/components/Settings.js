@@ -1,7 +1,7 @@
 import React from "react"
 import "./css/AppSettings.css"
 import { connect } from "react-redux"
-import { changeSyncInterval, removeVersusCurrency, addVersusCurrency } from "../redux/actions/settings"
+import { changeSyncInterval, removeVersusCurrency, addVersusCurrency, changeSound } from "../redux/actions/settings"
 import { Link } from "react-router-dom"
 
 function VersusCurrency({ name, remover }) {
@@ -105,10 +105,15 @@ class Settings extends React.Component {
         super(props)
 
         this.handleChange = this.handleChange.bind(this)
+        this.handleSoundChange = this.handleSoundChange.bind(this)
     }
 
     handleChange(event) {
         this.props.changeSyncInterval(event.target.value)
+    }
+
+    handleSoundChange(event) {
+        this.props.changeSound(event.target.value === "true")
     }
 
     render() {
@@ -142,6 +147,19 @@ class Settings extends React.Component {
                         <span className="setting-item-padder"> </span>
                         <VersusCurrencyManagerConnected />
                     </div>
+                    <div className="settings-item">
+                        <span>Enable sound notification:</span>
+                        <span className="setting-item-padder"> </span>
+                        <select
+                            id="enable-sound"
+                            onChange={this.handleSoundChange}
+                            value={this.props.sound}
+                        >
+                            <option value={true}>yes</option>
+                            <option value={false}>no</option>
+                        </select>
+                    </div>
+
                     <div className="message"> </div>
                 </div>
             </div>
@@ -151,7 +169,7 @@ class Settings extends React.Component {
 
 export default connect(
     store => {
-        return { updateInterval: store.settings.updateInterval }
+        return { updateInterval: store.settings.updateInterval, sound: store.settings.sound }
     },
-    { changeSyncInterval }
+    { changeSyncInterval, changeSound }
 )(Settings)

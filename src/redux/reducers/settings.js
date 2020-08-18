@@ -4,9 +4,10 @@ const settings = {
     priceChangePeriod: "24h",
     updateInterval: 5 * 1000 * 60,
     currentCurrencies: ["USD", "BTC"],
+    sound: true
 }
 
-export default function(state = settings, action) {
+export default function (state = settings, action) {
     switch (action.type) {
         case "CHANGE_PERIOD": {
             if (!action.payload) return { ...state }
@@ -23,6 +24,10 @@ export default function(state = settings, action) {
         }
         case "CHANGE_PORTFOLIO_SORT": {
             return { ...state, portfolioSortedBy: action.payload }
+        }
+
+        case "ALLOW_SOUND": {
+            return { ...state, sound: action.payload }
         }
 
         default:
